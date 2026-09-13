@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
-import LogoutButton from "@/components/logout-button";
+import DashboardWarningBanner from "@/components/dashboard-warning-banner";
+import DashboardUserMenu from "@/components/dashboard-user-menu";
 import ThemeToggle from "@/components/theme-toggle";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
+  const warnings =
+    (user.warnings as unknown as { message: string; by: string; at: string }[] | null) || [];
 
   return (
     <div className="min-h-screen bg-canvas">
+      {warnings.length > 0 && <DashboardWarningBanner message={warnings[warnings.length - 1].message} />}
       <header className="sticky top-0 z-40 border-b border-line/70 bg-surface/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <div className="flex items-center gap-8">
@@ -37,15 +41,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/15 text-xs font-bold text-indigo-600 dark:text-indigo-400">
-                {(user.name || user.email || "?").slice(0, 1).toUpperCase()}
-              </span>
-              <span className="hidden text-sm text-muted sm:block">
-                {user.name || user.email}
-              </span>
-            </div>
-            <LogoutButton />
+            <DashboardUserMenu name={user.name} email={user.email} />
           </div>
         </div>
       </header>

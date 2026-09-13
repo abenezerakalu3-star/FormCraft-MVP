@@ -40,6 +40,7 @@ export async function getSessionUser() {
     const { payload } = await jwtVerify(token, secret());
     if (!payload.sub) return null;
     const user = await prisma.user.findUnique({ where: { id: payload.sub } });
+    if (!user || user.blocked) return null;
     return user;
   } catch {
     return null;
@@ -49,5 +50,11 @@ export async function getSessionUser() {
 export async function requireUser() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  return user;
+}
+
+export async function requireAdmin() {
+  const user = await getSessionUser();
+  if (!user || user.role !== "admin") redirect("/login");
   return user;
 }

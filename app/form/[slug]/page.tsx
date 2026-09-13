@@ -11,10 +11,13 @@ export default async function PublicFormPage({
 
   const form = await prisma.form.findUnique({
     where: { slug },
-    include: { fields: { orderBy: { order: "asc" } } },
+    include: {
+      fields: { orderBy: { order: "asc" } },
+      user: { select: { blocked: true } },
+    },
   });
 
-  if (!form || !form.published) notFound();
+  if (!form || !form.published || form.user.blocked) notFound();
 
   return <FormViewer form={JSON.parse(JSON.stringify(form))} />;
 }

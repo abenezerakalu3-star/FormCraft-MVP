@@ -17,7 +17,10 @@ export async function POST(req: Request) {
   if (!user || !(await verifyPassword(password, user.password))) {
     return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
   }
+  if (user.blocked) {
+    return NextResponse.json({ error: "This account has been suspended. Contact support." }, { status: 403 });
+  }
 
   await createSession(user.id);
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, role: user.role });
 }

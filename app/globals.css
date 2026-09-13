@@ -36,6 +36,9 @@
   --animate-fade-up: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-fade-in: fade-in 0.4s ease both;
   --animate-scale-in: scale-in 0.18s ease both;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-marquee: marquee 32s linear infinite;
+  --animate-pulse-dot: pulse-dot 2.2s ease-in-out infinite;
 
   @keyframes fade-up {
     from {
@@ -63,6 +66,34 @@
     to {
       opacity: 1;
       transform: scale(1);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45);
+    }
+    50% {
+      opacity: 0.85;
+      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
     }
   }
 }
@@ -206,4 +237,9 @@ a:focus-visible {
   background: #4a525d;
   background-clip: content-box;
   border: 2px solid transparent;
+}
+
+/* Marquee pause on hover */
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

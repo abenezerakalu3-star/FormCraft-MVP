@@ -14,10 +14,10 @@ export async function POST(req: Request) {
 
   const form = await prisma.form.findUnique({
     where: { slug },
-    include: { fields: { orderBy: { order: "asc" } } },
+    include: { fields: { orderBy: { order: "asc" } }, user: { select: { blocked: true } } },
   });
 
-  if (!form || !form.published) {
+  if (!form || !form.published || form.user.blocked) {
     return NextResponse.json({ error: "Form not found" }, { status: 404 });
   }
 

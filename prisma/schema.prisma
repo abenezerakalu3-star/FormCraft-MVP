@@ -8,12 +8,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String     @id @default(cuid())
+  email     String     @unique
   name      String?
   password  String
-  createdAt DateTime @default(now())
+  role      String     @default("user")
+  blocked   Boolean    @default(false)
+  warnings  Json       @default("[]")
+  createdAt DateTime   @default(now())
   forms     Form[]
+  posts     BlogPost[]
 }
 
 model Form {
@@ -57,4 +61,24 @@ model FormView {
   createdAt DateTime @default(now())
 
   @@index([formId, createdAt])
+}
+
+model BlogPost {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  excerpt   String   @default("")
+  content   String
+  published Boolean  @default(false)
+  authorId  String?
+  author    User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, createdAt])
+}
+
+model Setting {
+  key   String @id
+  value Json
 }

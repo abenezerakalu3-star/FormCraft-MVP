@@ -1,9 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthShell from "@/components/auth-shell";
+import GoogleButton from "@/components/google-button";
+import PasswordInput from "@/components/password-input";
+
+const OAUTH_ERRORS: Record<string, string> = {
+  google_not_configured: "Google sign-in isn't configured yet. Please try logging in with your email.",
+  oauth_denied: "Google sign-in was cancelled.",
+  oauth_invalid_state: "Google sign-in session expired. Please try again.",
+  oauth_failed: "Google sign-in failed. Please try again.",
+  oauth_email_unverified: "Your Google account email isn't verified.",
+  oauth_blocked: "This account has been suspended. Contact support.",
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,6 +22,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("error");
+    if (code && OAUTH_ERRORS[code]) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setError(OAUTH_ERRORS[code]);
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -27,7 +46,7 @@ export default function LoginPage() {
         setError(data.error || "Something went wrong");
         return;
       }
-      router.push("/dashboard");
+      router.push(data.role === "admin" ? "/admin" : "/dashboard");
       router.refresh();
     } finally {
       setLoading(false);
@@ -36,6 +55,12 @@ export default function LoginPage() {
 
   return (
     <AuthShell title="Welcome back" subtitle="Log in to your FormCraft account">
+      <GoogleButton />
+      <div className="my-5 flex items-center gap-3 text-xs font-medium text-muted">
+        <span className="h-px flex-1 bg-line" />
+        or with email
+        <span className="h-px flex-1 bg-line" />
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="mb-1.5 block text-sm font-medium" htmlFor="email">
@@ -55,13 +80,12 @@ export default function LoginPage() {
           <label className="mb-1.5 block text-sm font-medium" htmlFor="password">
             Password
           </label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
-            required
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input-field"
+            onChange={setPassword}
+            required
+            autoComplete="current-password"
             placeholder="••••••••"
           />
         </div>
