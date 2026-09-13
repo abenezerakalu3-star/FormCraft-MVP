@@ -15,13 +15,13 @@ export interface DashboardForm {
   _count: { submissions: number; fields: number; views: number };
 }
 
-const GRADIENTS = [
-  "from-indigo-500 to-sky-500",
-  "from-emerald-500 to-teal-500",
-  "from-rose-500 to-pink-500",
-  "from-amber-500 to-orange-500",
-  "from-violet-500 to-purple-500",
-  "from-cyan-500 to-blue-500",
+const ACCENTS = [
+  "bg-indigo-500",
+  "bg-emerald-500",
+  "bg-rose-500",
+  "bg-amber-500",
+  "bg-violet-500",
+  "bg-cyan-500",
 ];
 
 export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
@@ -147,14 +147,14 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
       ) : (
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((form, i) => {
-            const grad = GRADIENTS[i % GRADIENTS.length];
+            const accent = ACCENTS[i % ACCENTS.length];
             return (
               <div
                 key={form.id}
                 className="group card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/5 animate-fade-up"
                 style={{ animationDelay: `${i * 60}ms` }}
               >
-                <div className={`h-1.5 bg-gradient-to-r ${grad}`} />
+                <div className={`h-1.5 ${accent}`} />
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <Link

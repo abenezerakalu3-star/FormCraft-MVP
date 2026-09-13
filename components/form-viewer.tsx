@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle2, Send, Sparkles } from "lucide-react";
 import { splitOptions } from "@/lib/fields";
+import Celebration from "@/components/celebration";
 
 interface FieldData {
   id: string;
@@ -80,12 +81,11 @@ export default function FormViewer({ form }: { form: FormData }) {
 
   return (
     <div className="min-h-screen bg-canvas px-4 py-12">
+      {submitted && <Celebration />}
       <div className="mx-auto max-w-xl animate-fade-up">
         {submitted ? (
           <div className="card overflow-hidden text-center">
-            <div
-              className="h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500"
-            />
+            <div className="h-1.5 bg-emerald-500" />
             <div className="p-12">
               <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/10 animate-scale-in">
                 <CheckCircle2 className="h-10 w-10 text-emerald-500" />
@@ -120,9 +120,9 @@ export default function FormViewer({ form }: { form: FormData }) {
                 </p>
               )}
               {/* Progress bar */}
-              <div className="h-1.5 w-full bg-gray-100 dark:bg-gray-100/10">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-100/10">
                 <div
-                  className="h-full bg-gradient-to-r from-indigo-500 to-sky-500 transition-all duration-500 ease-out"
+                  className="h-full rounded-full bg-accent transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>

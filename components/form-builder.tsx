@@ -289,7 +289,7 @@ export default function FormBuilder({ form }: { form: FormData }) {
         {/* Canvas */}
         <div className="min-w-0 flex-1 space-y-4">
           <div className="card overflow-hidden animate-fade-in">
-            <div className="h-1.5 bg-gradient-to-r from-indigo-500 to-sky-500" />
+            <div className="h-1.5 bg-accent" />
             <div className="p-6">
               <input
                 value={title}

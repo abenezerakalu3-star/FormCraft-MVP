@@ -48,7 +48,7 @@ export default function NewFormPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="card overflow-hidden animate-fade-up">
-        <div className="h-1.5 bg-gradient-to-r from-indigo-500 to-sky-500" />
+        <div className="h-1.5 bg-accent" />
         <div className="p-6">
           <label className="mb-1.5 block text-sm font-medium">Form name</label>
           <input
