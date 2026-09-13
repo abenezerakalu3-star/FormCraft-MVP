@@ -27,6 +27,7 @@ model Form {
   createdAt   DateTime     @default(now())
   fields      Field[]
   submissions Submission[]
+  views       FormView[]
 }
 
 model Field {
@@ -46,4 +47,14 @@ model Submission {
   form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
   data      Json
   createdAt DateTime @default(now())
+}
+
+model FormView {
+  id        String   @id @default(cuid())
+  formId    String
+  form      Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  visitorId String?
+  createdAt DateTime @default(now())
+
+  @@index([formId, createdAt])
 }

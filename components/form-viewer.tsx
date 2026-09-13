@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle2, Send, Sparkles } from "lucide-react";
 import { splitOptions } from "@/lib/fields";
 
@@ -26,6 +26,25 @@ export default function FormViewer({ form }: { form: FormData }) {
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const key = `fc:viewed:${form.id}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      let visitorId = sessionStorage.getItem("fc:visitor");
+      if (!visitorId) {
+        visitorId = crypto.randomUUID();
+        sessionStorage.setItem("fc:visitor", visitorId);
+      }
+      navigator.sendBeacon(
+        `/api/forms/${form.id}/view`,
+        new Blob([JSON.stringify({ visitorId })], { type: "application/json" })
+      );
+      sessionStorage.setItem(key, "1");
+    } catch {
+      // view tracking is best-effort
+    }
+  }, [form.id]);
 
   function setField(id: string, value: string) {
     setValues((prev) => ({ ...prev, [id]: value }));

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Search, Trash2, ClipboardList } from "lucide-react";
+import { BarChart3, Plus, Search, Trash2, ClipboardList } from "lucide-react";
 import CopyButton from "@/components/copy-button";
 
 export interface DashboardForm {
@@ -12,7 +12,7 @@ export interface DashboardForm {
   slug: string;
   published: boolean;
   createdAt: string;
-  _count: { submissions: number; fields: number };
+  _count: { submissions: number; fields: number; views: number };
 }
 
 const GRADIENTS = [
@@ -157,9 +157,13 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
                 <div className={`h-1.5 bg-gradient-to-r ${grad}`} />
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
-                    <h3 className="line-clamp-1 text-base font-bold group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <Link
+                      href={`/dashboard/forms/${form.id}/overview`}
+                      className="line-clamp-1 text-base font-bold group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
+                      title={`Open ${form.title}`}
+                    >
                       {form.title}
-                    </h3>
+                    </Link>
                     <span
                       className={`chip shrink-0 ${
                         form.published
@@ -174,6 +178,7 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-muted">
+                    {form._count.views} view{form._count.views === 1 ? "" : "s"} ·{" "}
                     {form._count.submissions} response{form._count.submissions === 1 ? "" : "s"}
                     {form._count.fields > 0 && (
                       <> · {form._count.fields} field{form._count.fields === 1 ? "" : "s"}</>
@@ -189,6 +194,13 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
                   </p>
 
                   <div className="mt-4 flex items-center gap-1.5">
+                    <Link
+                      href={`/dashboard/forms/${form.id}/overview`}
+                      title="Analytics & exports"
+                      className="rounded-lg border border-line px-2.5 py-2 text-muted transition-colors hover:border-indigo-300 hover:text-indigo-600 dark:hover:border-indigo-500/50"
+                    >
+                      <BarChart3 className="h-3.5 w-3.5" />
+                    </Link>
                     <Link
                       href={`/dashboard/forms/${form.id}`}
                       className="rounded-lg border border-line px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-indigo-300 hover:text-indigo-600 sm:flex-1 sm:text-center dark:hover:border-indigo-500/50"

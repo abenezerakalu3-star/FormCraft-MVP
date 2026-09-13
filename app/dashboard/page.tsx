@@ -7,7 +7,7 @@ export default async function DashboardPage() {
   const user = await requireUser();
   const forms = await prisma.form.findMany({
     where: { userId: user.id },
-    include: { _count: { select: { submissions: true, fields: true } } },
+    include: { _count: { select: { submissions: true, fields: true, views: true } } },
     orderBy: { createdAt: "desc" },
   });
 
