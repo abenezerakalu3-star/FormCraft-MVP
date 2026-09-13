@@ -1,26 +1,41 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #0b0c0e;
   --surface: #ffffff;
+  --canvas: #f5f6f8;
+  --muted: #667085;
+  --line: #e4e7ec;
   --accent: #4f46e5;
+}
+
+.dark {
+  --background: #0b0d10;
+  --foreground: #f1f3f6;
+  --surface: #15181d;
+  --canvas: #0b0d10;
+  --muted: #9aa3b2;
+  --line: #2a2f37;
+  --accent: #818cf8;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-canvas: var(--canvas);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
   --color-accent: var(--accent);
-  --color-muted: #667085;
-  --color-line: #e4e7ec;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
   --animate-fade-up: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-fade-in: fade-in 0.4s ease both;
   --animate-scale-in: scale-in 0.18s ease both;
-  --animate-shimmer: shimmer 2.4s linear infinite;
 
   @keyframes fade-up {
     from {
@@ -50,21 +65,14 @@
       transform: scale(1);
     }
   }
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
 }
 
 body {
-  background: #f5f6f8;
+  background: var(--canvas);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {
@@ -82,16 +90,16 @@ a:focus-visible {
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-foreground px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-gray-800 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-foreground px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-gray-800 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 dark:bg-foreground dark:text-background dark:hover:bg-gray-200;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all duration-200 hover:bg-gray-50 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all duration-200 hover:bg-gray-50 active:scale-[0.98] dark:hover:bg-gray-100/10;
   }
   .input-field {
-    @apply w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-foreground shadow-sm outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-accent/60 focus:ring-4 focus:ring-accent/10;
+    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-foreground shadow-sm outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-accent/60 focus:ring-4 focus:ring-accent/10 dark:placeholder:text-gray-500;
   }
   .card {
-    @apply rounded-2xl border border-line bg-white shadow-sm;
+    @apply rounded-2xl border border-line bg-surface shadow-sm;
   }
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
@@ -112,8 +120,19 @@ a:focus-visible {
   border: 2px solid transparent;
   background-clip: content-box;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: #39404a;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
 ::-webkit-scrollbar-thumb:hover {
   background: #b6bcc6;
+  background-clip: content-box;
+  border: 2px solid transparent;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4a525d;
   background-clip: content-box;
   border: 2px solid transparent;
 }

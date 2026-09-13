@@ -3,6 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  ChevronDown,
+  Copy,
+  Link2,
+  MousePointerClick,
+  Rocket,
+  Save,
+  Trash2,
+} from "lucide-react";
 import { FIELD_TYPES, newField, splitOptions } from "@/lib/fields";
 import type { FieldType } from "@/lib/fields";
 
@@ -28,22 +40,22 @@ function PreviewControl({ field }: { field: FieldData }) {
   switch (field.type) {
     case "textarea":
       return (
-        <div className="mt-2 h-20 cursor-not-allowed rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-400">
+        <div className="mt-2 h-20 cursor-not-allowed rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-400 dark:border-gray-600 dark:bg-gray-100/10">
           Long answer text
         </div>
       );
     case "select":
       return (
-        <div className="mt-2 flex h-9 cursor-not-allowed items-center justify-between rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400">
-          {options[0] || "Select an option"} <span>▾</span>
+        <div className="mt-2 flex h-9 cursor-not-allowed items-center justify-between rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400 dark:border-gray-600 dark:bg-gray-100/10 dark:border-gray-600 dark:bg-gray-100/10">
+          {options[0] || "Select an option"} <ChevronDown className="h-4 w-4" />
         </div>
       );
     case "radio":
       return (
         <div className="mt-2 space-y-1.5">
           {(options.length ? options : ["Option 1"]).map((o) => (
-            <div key={o} className="flex items-center gap-2 text-sm text-gray-500">
-              <span className="h-4 w-4 rounded-full border-2 border-dashed border-gray-300" /> {o}
+            <div key={o} className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <span className="h-4 w-4 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-600" /> {o}
             </div>
           ))}
         </div>
@@ -52,27 +64,27 @@ function PreviewControl({ field }: { field: FieldData }) {
       return (
         <div className="mt-2 space-y-1.5">
           {(options.length ? options : ["Option 1"]).map((o) => (
-            <div key={o} className="flex items-center gap-2 text-sm text-gray-500">
-              <span className="h-4 w-4 rounded border-2 border-dashed border-gray-300" /> {o}
+            <div key={o} className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <span className="h-4 w-4 rounded border-2 border-dashed border-gray-300 dark:border-gray-600" /> {o}
             </div>
           ))}
         </div>
       );
     case "number":
       return (
-        <div className="mt-2 flex h-9 cursor-not-allowed items-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400">
+        <div className="mt-2 flex h-9 cursor-not-allowed items-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400 dark:border-gray-600 dark:bg-gray-100/10">
           0
         </div>
       );
     case "date":
       return (
-        <div className="mt-2 flex h-9 cursor-not-allowed items-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400">
+        <div className="mt-2 flex h-9 cursor-not-allowed items-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400 dark:border-gray-600 dark:bg-gray-100/10">
           MM/DD/YYYY
         </div>
       );
     default:
       return (
-        <div className="mt-2 flex h-9 cursor-not-allowed items-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400">
+        <div className="mt-2 flex h-9 cursor-not-allowed items-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400 dark:border-gray-600 dark:bg-gray-100/10">
           {field.type === "email" ? "user@example.com" : "Short answer text"}
         </div>
       );
@@ -185,7 +197,7 @@ export default function FormBuilder({ form }: { form: FormData }) {
       const data = await res.json();
       if (!res.ok) return notify(data.error || "Failed to publish", true);
       setPublished(!published);
-      notify(!published ? "Form is now live 🎉" : "Form unpublished");
+      notify(!published ? "Form published — share it!" : "Form unpublished");
       router.refresh();
     } finally {
       setPublishing(false);
@@ -201,9 +213,9 @@ export default function FormBuilder({ form }: { form: FormData }) {
   return (
     <div className="mx-auto max-w-[1400px]">
       {/* Toolbar */}
-      <div className="sticky top-16 z-30 mb-6 -mx-2 flex flex-wrap items-center gap-2 border-b border-line bg-[#f5f6f8]/95 px-2 py-3 backdrop-blur-md">
-        <Link href="/dashboard" className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-gray-200/70 hover:text-foreground">
-          ← Forms
+      <div className="sticky top-16 z-30 mb-6 -mx-2 flex flex-wrap items-center gap-2 border-b border-line bg-canvas/95 px-2 py-3 backdrop-blur-md">
+        <Link href="/dashboard" className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-gray-200/70 hover:text-foreground dark:hover:bg-gray-100/10">
+          <ArrowLeft className="h-4 w-4" /> Forms
         </Link>
         <div className="mx-1 h-5 w-px bg-line" />
         <span className="max-w-[10rem] truncate rounded-lg px-2 py-1 text-sm font-semibold">{title}</span>
@@ -212,35 +224,35 @@ export default function FormBuilder({ form }: { form: FormData }) {
 
         <Link
           href={`/dashboard/forms/${form.id}/submissions`}
-          className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-gray-200/70 hover:text-foreground"
+          className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-gray-200/70 hover:text-foreground dark:hover:bg-gray-100/10"
         >
           Responses
         </Link>
 
         <div className="ml-auto flex items-center gap-2">
           {dirty && !saving && (
-            <span className="chip bg-amber-50 text-amber-700">Unsaved changes</span>
+            <span className="chip bg-amber-500/10 text-amber-600 dark:text-amber-400">Unsaved changes</span>
           )}
           {published ? (
-            <span className="chip bg-emerald-50 text-emerald-700">
+            <span className="chip bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Live
             </span>
           ) : (
-            <span className="chip bg-gray-100 text-muted">Draft</span>
+            <span className="chip bg-gray-100 text-muted dark:bg-gray-100/10">Draft</span>
           )}
           <button onClick={saveFields} disabled={!dirty || saving} className="btn-primary !py-2 disabled:opacity-40">
-            {saving ? "Saving…" : "Save"}
+            <Save className="h-4 w-4" /> {saving ? "Saving…" : "Save"}
           </button>
           <button
             onClick={togglePublish}
             disabled={publishing}
-            className={published ? "btn-primary !py-2 !bg-gray-700 hover:!bg-gray-800" : "btn-primary !py-2"}
+            className={published ? "btn-primary !py-2 !bg-gray-700 hover:!bg-gray-800 dark:!bg-gray-400" : "btn-primary !py-2"}
           >
-            {published ? "Unpublish" : "Publish"}
+            <Rocket className="h-4 w-4" /> {published ? "Unpublish" : "Publish"}
           </button>
           {published && (
             <button onClick={handleCopy} className="btn-secondary !py-2">
-              Copy link
+              <Link2 className="h-4 w-4" /> Copy link
             </button>
           )}
         </div>
@@ -253,18 +265,21 @@ export default function FormBuilder({ form }: { form: FormData }) {
             Add a field
           </p>
           <div className="space-y-1.5">
-            {FIELD_TYPES.map((ft) => (
-              <button
-                key={ft.value}
-                onClick={() => addField(ft.value)}
-                className="flex w-full items-center gap-3 rounded-xl border border-line bg-white px-3 py-2.5 text-left text-sm font-medium shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md active:scale-[0.98]"
-              >
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xs text-indigo-600">
-                  {ft.icon}
-                </span>
-                {ft.label}
-              </button>
-            ))}
+            {FIELD_TYPES.map((ft) => {
+              const Icon = ft.icon;
+              return (
+                <button
+                  key={ft.value}
+                  onClick={() => addField(ft.value)}
+                  className="flex w-full items-center gap-3 rounded-xl border border-line bg-surface px-3 py-2.5 text-left text-sm font-medium shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md active:scale-[0.98]"
+                >
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  {ft.label}
+                </button>
+              );
+            })}
           </div>
           <p className="mt-6 rounded-xl border border-dashed border-line p-3 text-xs leading-relaxed text-gray-400">
             Tip: drag any field card to reorder it on the canvas.
@@ -297,7 +312,9 @@ export default function FormBuilder({ form }: { form: FormData }) {
 
           {fields.length === 0 && (
             <div className="card border-dashed p-12 text-center text-sm text-gray-400 animate-fade-in">
-              <div className="mb-3 text-3xl">＋</div>
+              <div className="mb-3 flex justify-center">
+                <MousePointerClick className="h-7 w-7 text-gray-400" />
+              </div>
               Add your first field from the left panel.
             </div>
           )}
@@ -322,7 +339,7 @@ export default function FormBuilder({ form }: { form: FormData }) {
                   setOverIndex(null);
                 }}
                 onClick={() => setSelectedId(field.id)}
-                className={`card cursor-pointer p-6 transition-all duration-200 animate-fade-up ${
+                className={`group card cursor-pointer p-6 transition-all duration-200 animate-fade-up ${
                   isSelected
                     ? "border-indigo-500 ring-4 ring-indigo-500/10 shadow-lg shadow-indigo-900/5"
                     : "hover:-translate-y-0.5 hover:shadow-md"
@@ -336,9 +353,13 @@ export default function FormBuilder({ form }: { form: FormData }) {
                     {typeInfo.label}
                   </span>
                   {field.required && (
-                    <span className="chip bg-red-50 text-red-600">Required</span>
+                    <span className="chip bg-red-500/10 text-red-600 dark:text-red-400">Required</span>
                   )}
-                  <div className="ml-auto flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                  <div
+                    className={`ml-auto flex items-center gap-0.5 transition-opacity ${
+                      isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    }`}
+                  >
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -346,9 +367,9 @@ export default function FormBuilder({ form }: { form: FormData }) {
                       }}
                       disabled={index === 0}
                       title="Move up"
-                      className="rounded-lg px-2 py-1.5 text-gray-400 hover:bg-gray-100 hover:text-foreground disabled:opacity-30"
+                      className="rounded-lg px-2 py-1.5 text-gray-400 hover:bg-gray-100 hover:text-foreground disabled:opacity-30 dark:hover:bg-gray-100/10"
                     >
-                      ▲
+                      <ArrowUp className="h-4 w-4" />
                     </button>
                     <button
                       onClick={(e) => {
@@ -357,9 +378,9 @@ export default function FormBuilder({ form }: { form: FormData }) {
                       }}
                       disabled={index === fields.length - 1}
                       title="Move down"
-                      className="rounded-lg px-2 py-1.5 text-gray-400 hover:bg-gray-100 hover:text-foreground disabled:opacity-30"
+                      className="rounded-lg px-2 py-1.5 text-gray-400 hover:bg-gray-100 hover:text-foreground disabled:opacity-30 dark:hover:bg-gray-100/10"
                     >
-                      ▼
+                      <ArrowDown className="h-4 w-4" />
                     </button>
                     <button
                       onClick={(e) => {
@@ -367,9 +388,9 @@ export default function FormBuilder({ form }: { form: FormData }) {
                         duplicateField(field.id);
                       }}
                       title="Duplicate"
-                      className="rounded-lg px-2 py-1.5 text-gray-400 hover:bg-gray-100 hover:text-foreground"
+                      className="rounded-lg px-2 py-1.5 text-gray-400 hover:bg-gray-100 hover:text-foreground dark:hover:bg-gray-100/10"
                     >
-                      ⧉
+                      <Copy className="h-4 w-4" />
                     </button>
                     <button
                       onClick={(e) => {
@@ -377,9 +398,9 @@ export default function FormBuilder({ form }: { form: FormData }) {
                         removeField(field.id);
                       }}
                       title="Delete"
-                      className="rounded-lg px-2 py-1.5 text-red-400 hover:bg-red-50 hover:text-red-600"
+                      className="rounded-lg px-2 py-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10"
                     >
-                      ✕
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
@@ -479,19 +500,21 @@ export default function FormBuilder({ form }: { form: FormData }) {
                     onClick={() => duplicateField(selected.id)}
                     className="btn-secondary w-full"
                   >
-                    ⧉ Duplicate field
+                    <Copy className="h-4 w-4" /> Duplicate field
                   </button>
                   <button
                     onClick={() => removeField(selected.id)}
-                    className="mt-2 w-full rounded-xl border border-red-200 px-5 py-2.5 text-sm font-semibold text-red-600 transition-all hover:bg-red-50 active:scale-[0.98]"
+                    className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 px-5 py-2.5 text-sm font-semibold text-red-600 transition-all hover:bg-red-50 active:scale-[0.98] dark:border-red-500/40 dark:hover:bg-red-500/10"
                   >
-                    Delete field
+                    <Trash2 className="h-4 w-4" /> Delete field
                   </button>
                 </div>
               </div>
             ) : (
               <div className="py-2 text-center text-sm text-gray-400">
-                <div className="mb-2 text-2xl">👈</div>
+                <div className="mb-2 flex justify-center">
+                  <MousePointerClick className="h-6 w-6" />
+                </div>
                 Select a field to edit its settings.
               </div>
             )}

@@ -1,14 +1,24 @@
 import { randomBytes } from "crypto";
+import {
+  AlignLeft,
+  Calendar,
+  ChevronDown,
+  Hash,
+  ListChecks,
+  Mail,
+  Radio,
+  Type,
+} from "lucide-react";
 
 export const FIELD_TYPES = [
-  { value: "text", label: "Short text", icon: "Aa" },
-  { value: "textarea", label: "Paragraph", icon: "☰" },
-  { value: "email", label: "Email", icon: "@" },
-  { value: "number", label: "Number", icon: "#" },
-  { value: "date", label: "Date", icon: "📅" },
-  { value: "select", label: "Dropdown", icon: "▾" },
-  { value: "radio", label: "Multiple choice", icon: "◉" },
-  { value: "checkbox", label: "Checkboxes", icon: "☑" },
+  { value: "text", label: "Short text", icon: Type },
+  { value: "textarea", label: "Paragraph", icon: AlignLeft },
+  { value: "email", label: "Email", icon: Mail },
+  { value: "number", label: "Number", icon: Hash },
+  { value: "date", label: "Date", icon: Calendar },
+  { value: "select", label: "Dropdown", icon: ChevronDown },
+  { value: "radio", label: "Multiple choice", icon: Radio },
+  { value: "checkbox", label: "Checkboxes", icon: ListChecks },
 ] as const;
 
 export type FieldType = (typeof FIELD_TYPES)[number]["value"];

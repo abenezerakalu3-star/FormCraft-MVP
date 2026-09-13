@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Plus, Search, Trash2, ClipboardList } from "lucide-react";
 import CopyButton from "@/components/copy-button";
 
 export interface DashboardForm {
@@ -64,8 +65,8 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
 
   const stats = [
     { label: "Total forms", value: totals.forms, tone: "text-foreground" },
-    { label: "Total responses", value: totals.submissions, tone: "text-indigo-600" },
-    { label: "Live", value: totals.live, tone: "text-emerald-600" },
+    { label: "Total responses", value: totals.submissions, tone: "text-indigo-600 dark:text-indigo-400" },
+    { label: "Live", value: totals.live, tone: "text-emerald-600 dark:text-emerald-400" },
     { label: "Drafts", value: totals.drafts, tone: "text-muted" },
   ];
 
@@ -76,7 +77,7 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
         {stats.map((s, i) => (
           <div
             key={s.label}
-            className={`card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5`}
+            className="card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5"
             style={{ animationDelay: `${i * 60}ms` }}
           >
             <p className="text-sm text-muted">{s.label}</p>
@@ -88,9 +89,7 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
       {/* Toolbar */}
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
         <div className="relative">
-          <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-400">
-            ⌕
-          </span>
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -98,7 +97,7 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
             className="input-field pl-9 sm:w-64"
           />
         </div>
-        <div className="flex items-center gap-1 rounded-xl border border-line bg-white p-1 shadow-sm">
+        <div className="flex items-center gap-1 rounded-xl border border-line bg-surface p-1 shadow-sm">
           {([
             ["all", "All"],
             ["live", "Live"],
@@ -108,7 +107,9 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
               key={key}
               onClick={() => setFilter(key)}
               className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
-                filter === key ? "bg-foreground text-white shadow-sm" : "text-muted hover:text-foreground"
+                filter === key
+                  ? "bg-foreground text-surface shadow-sm dark:text-background"
+                  : "text-muted hover:text-foreground"
               }`}
             >
               {label}
@@ -119,24 +120,24 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
 
       {/* Cards */}
       {filtered.length === 0 ? (
-        <div className="mt-8 flex flex-col items-center rounded-3xl border border-dashed border-line bg-white px-6 py-20 text-center animate-fade-in">
+        <div className="mt-8 flex flex-col items-center rounded-3xl border border-dashed border-line bg-surface px-6 py-20 text-center animate-fade-in">
           {forms.length === 0 ? (
             <>
-              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-3xl">
-                ✦
+              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-500">
+                <ClipboardList className="h-7 w-7" />
               </div>
               <h2 className="text-lg font-bold">No forms yet</h2>
               <p className="mt-1 mb-6 max-w-sm text-sm text-muted">
                 Create your first form and start collecting responses in minutes.
               </p>
               <Link href="/dashboard/forms/new" className="btn-primary">
-                Create your first form
+                <Plus className="h-4 w-4" /> Create your first form
               </Link>
             </>
           ) : (
             <>
-              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-3xl">
-                ⌕
+              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-gray-400 dark:bg-gray-100/10">
+                <Search className="h-7 w-7" />
               </div>
               <h2 className="text-lg font-bold">No matches</h2>
               <p className="mt-1 text-sm text-muted">Try a different search term or filter.</p>
@@ -156,17 +157,19 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
                 <div className={`h-1.5 bg-gradient-to-r ${grad}`} />
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
-                    <h3 className="line-clamp-1 text-base font-bold group-hover:text-indigo-600">
+                    <h3 className="line-clamp-1 text-base font-bold group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
                       {form.title}
                     </h3>
                     <span
                       className={`chip shrink-0 ${
                         form.published
-                          ? "bg-emerald-50 text-emerald-700"
-                          : "bg-gray-100 text-muted"
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                          : "bg-gray-100 text-muted dark:bg-gray-100/10"
                       }`}
                     >
-                      <span className={`h-1.5 w-1.5 rounded-full ${form.published ? "bg-emerald-500" : "bg-gray-300"}`} />
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${form.published ? "bg-emerald-500" : "bg-gray-300"}`}
+                      />
                       {form.published ? "Live" : "Draft"}
                     </span>
                   </div>
@@ -177,19 +180,24 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
                     )}
                   </p>
                   <p className="mt-0.5 text-xs text-gray-400">
-                    Created {new Date(form.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                    Created{" "}
+                    {new Date(form.createdAt).toLocaleDateString(undefined, {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </p>
 
                   <div className="mt-4 flex items-center gap-1.5">
                     <Link
                       href={`/dashboard/forms/${form.id}`}
-                      className="rounded-lg border border-line px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-indigo-300 hover:text-indigo-600 sm:flex-1 sm:text-center"
+                      className="rounded-lg border border-line px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-indigo-300 hover:text-indigo-600 sm:flex-1 sm:text-center dark:hover:border-indigo-500/50"
                     >
                       Edit
                     </Link>
                     <Link
                       href={`/dashboard/forms/${form.id}/submissions`}
-                      className="rounded-lg bg-foreground px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-indigo-600 sm:flex-1 sm:text-center"
+                      className="rounded-lg bg-foreground px-3 py-2 text-xs font-semibold text-surface transition-colors hover:bg-indigo-600 dark:text-background sm:flex-1 sm:text-center"
                     >
                       Responses
                     </Link>
@@ -198,9 +206,9 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
                       onClick={() => handleDelete(form.id, form.title)}
                       disabled={deleting === form.id}
                       title="Delete form"
-                      className="rounded-lg border border-transparent px-2.5 py-2 text-xs text-red-500 transition-colors hover:border-red-200 hover:bg-red-50 disabled:opacity-50"
+                      className="rounded-lg border border-transparent px-2.5 py-2 text-red-500 transition-colors hover:border-red-200 hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-500/10 dark:hover:border-red-500/40"
                     >
-                      {deleting === form.id ? "…" : "✕"}
+                      {deleting === form.id ? "…" : <Trash2 className="h-3.5 w-3.5" />}
                     </button>
                   </div>
                 </div>

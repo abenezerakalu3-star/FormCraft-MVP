@@ -1,5 +1,7 @@
 "use client";
 
+import { Download } from "lucide-react";
+
 interface ExportField {
   id: string;
   label: string;
@@ -46,7 +48,7 @@ export default function ExportCsv({
 
   return (
     <button onClick={download} className="btn-secondary">
-      <span aria-hidden>⬇</span> Export CSV
+      <Download className="h-4 w-4" /> Export CSV
     </button>
   );
 }

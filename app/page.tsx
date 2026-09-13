@@ -1,34 +1,46 @@
 import Link from "next/link";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Coffee,
+  Database,
+  LayoutGrid,
+  Send,
+  ShieldCheck,
+  Sparkles,
+  Table2,
+  Zap,
+} from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 
 const features = [
   {
-    icon: "＋",
+    icon: LayoutGrid,
     title: "Visual builder",
     desc: "Add text, emails, dates, dropdowns, checkboxes and more — no code required.",
   },
   {
-    icon: "⇢",
+    icon: Send,
     title: "Share instantly",
     desc: "Every form gets a unique link. Send it via email, chat, or embed it anywhere.",
   },
   {
-    icon: "▤",
+    icon: Table2,
     title: "Organized results",
     desc: "All responses land in a clean table. Export to CSV whenever you need it.",
   },
   {
-    icon: "◉",
+    icon: ShieldCheck,
     title: "Smart validation",
     desc: "Required fields, email checks, and dropdown limits enforced on the server.",
   },
   {
-    icon: "⚡",
+    icon: Zap,
     title: "Fast & lightweight",
     desc: "Boots in milliseconds. No tracking, no pop-ups — just your form.",
   },
   {
-    icon: "✓",
+    icon: Database,
     title: "Your data, your rules",
     desc: "Self host with your own database. Free, open, and you keep everything.",
   },
@@ -81,12 +93,12 @@ export default async function Home() {
   const user = await getSessionUser();
 
   return (
-    <div className="min-h-screen bg-[#f5f6f8] text-foreground">
+    <div className="min-h-screen bg-canvas text-foreground">
       {/* Navbar */}
-      <nav className="sticky top-0 z-40 border-b border-line/70 bg-white/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-40 border-b border-line/70 bg-surface/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-white">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-surface dark:text-background">
               F
             </span>
             FormCraft
@@ -126,19 +138,18 @@ export default async function Home() {
         <div
           className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full opacity-60 blur-3xl"
           style={{
-            background:
-              "radial-gradient(closest-side, #c7d2fe 0%, #e0e7ff 45%, transparent 100%)",
+            background: "radial-gradient(closest-side, rgba(99,102,241,0.35), transparent 100%)",
           }}
         />
         <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-6 pb-24 pt-20 lg:grid-cols-2">
           <div className="animate-fade-up">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-white px-3.5 py-1.5 text-xs font-semibold text-muted shadow-sm">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 text-xs font-semibold text-muted shadow-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
               Free forever for creators
             </div>
             <h1 className="text-5xl font-bold leading-[1.05] tracking-tight">
               Build beautiful forms{" "}
-              <span className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 bg-clip-text text-transparent dark:from-indigo-400 dark:via-indigo-300 dark:to-sky-400">
                 in minutes
               </span>
             </h1>
@@ -148,16 +159,20 @@ export default async function Home() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href={user ? "/dashboard" : "/register"} className="btn-primary px-6 py-3 text-base">
-                Create my first form
+                Create my first form <ArrowRight className="h-4 w-4" />
               </Link>
               <a href="#how" className="btn-secondary px-6 py-3 text-base">
                 See how it works
               </a>
             </div>
             <div className="mt-10 flex items-center gap-6 text-sm text-muted">
-              <span className="font-semibold text-foreground">♥ 0 lines of code</span>
+              <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
+                <Zap className="h-4 w-4 text-indigo-500" /> 0 lines of code
+              </span>
               <span className="h-4 w-px bg-line" />
-              <span className="font-semibold text-foreground">★ No card required</span>
+              <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
+                <Sparkles className="h-4 w-4 text-amber-500" /> No card required
+              </span>
             </div>
           </div>
 
@@ -166,19 +181,22 @@ export default async function Home() {
             <div
               className="absolute -inset-6 rounded-3xl opacity-70 blur-2xl"
               style={{
-                background:
-                  "radial-gradient(closest-side, rgba(79,70,229,0.16), transparent 70%)",
+                background: "radial-gradient(closest-side, rgba(79,70,229,0.16), transparent 70%)",
               }}
             />
-            <div className="relative w-full max-w-md rounded-3xl border border-line bg-white p-7 shadow-2xl shadow-indigo-900/10">
+            <div className="relative w-full max-w-md rounded-3xl border border-line bg-surface p-7 shadow-2xl shadow-indigo-900/10">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-lg font-bold">Coffee Order 🎉</h3>
+                  <h3 className="flex items-center gap-2 text-lg font-bold">
+                    <Coffee className="h-5 w-5 text-indigo-500" /> Coffee Order
+                  </h3>
                   <p className="mt-0.5 text-sm text-muted">
                     Help us brew the perfect cup.
                   </p>
                 </div>
-                <span className="chip bg-emerald-50 text-emerald-700">● Live</span>
+                <span className="chip bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Live
+                </span>
               </div>
               <div className="mt-6 space-y-4">
                 {[
@@ -193,7 +211,7 @@ export default async function Home() {
                       {f.required && <span className="text-red-500"> *</span>}
                     </label>
                     {f.type === "select" ? (
-                      <div className="flex h-9 items-center justify-between rounded-lg border border-line bg-gray-50 px-3 text-sm text-muted">
+                      <div className="flex h-9 items-center justify-between rounded-lg border border-line bg-canvas px-3 text-sm text-muted">
                         {f.options?.[0]} <span className="text-gray-400">▾</span>
                       </div>
                     ) : f.type === "radio" ? (
@@ -206,14 +224,14 @@ export default async function Home() {
                         ))}
                       </div>
                     ) : (
-                      <div className="flex h-9 items-center rounded-lg border border-line bg-gray-50 px-3 text-sm text-gray-400">
+                      <div className="flex h-9 items-center rounded-lg border border-line bg-canvas px-3 text-sm text-gray-400">
                         {f.ph}
                       </div>
                     )}
                   </div>
                 ))}
-                <div className="flex h-11 items-center justify-center rounded-xl bg-foreground text-sm font-semibold text-white">
-                  Submit
+                <div className="flex h-11 items-center justify-center gap-2 rounded-xl bg-foreground text-sm font-semibold text-surface dark:text-background">
+                  Submit <Send className="h-4 w-4" />
                 </div>
               </div>
             </div>
@@ -222,10 +240,10 @@ export default async function Home() {
       </section>
 
       {/* Features */}
-      <section id="features" className="border-t border-line bg-white">
+      <section id="features" className="border-t border-line bg-surface">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="mx-auto max-w-xl text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
               Features
             </span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight">
@@ -236,19 +254,22 @@ export default async function Home() {
             </p>
           </div>
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((f, i) => (
-              <div
-                key={f.title}
-                className="group rounded-2xl border border-line p-6 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-900/5"
-                style={{ animationDelay: `${i * 60}ms` }}
-              >
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-lg font-bold text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white">
-                  {f.icon}
+            {features.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <div
+                  key={f.title}
+                  className="group rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-900/5 dark:hover:border-indigo-500/40"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 transition-colors group-hover:bg-indigo-600 group-hover:text-white dark:text-indigo-400">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="mb-1 text-base font-semibold">{f.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted">{f.desc}</p>
                 </div>
-                <h3 className="mb-1 text-base font-semibold">{f.title}</h3>
-                <p className="text-sm leading-relaxed text-muted">{f.desc}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -256,15 +277,15 @@ export default async function Home() {
       {/* How it works */}
       <section id="how" className="mx-auto max-w-6xl px-6 py-20">
         <div className="text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
+          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
             How it works
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight">Three steps to your first form</h2>
         </div>
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {steps.map((s) => (
-            <div key={s.n} className="relative rounded-2xl border border-line bg-white p-7">
-              <span className="text-4xl font-black text-indigo-100">{s.n}</span>
+            <div key={s.n} className="relative rounded-2xl border border-line bg-surface p-7">
+              <span className="text-4xl font-black text-indigo-500/20">{s.n}</span>
               <h3 className="mt-3 text-lg font-semibold">{s.title}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.desc}</p>
             </div>
@@ -273,10 +294,10 @@ export default async function Home() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="border-t border-line bg-white">
+      <section id="pricing" className="border-t border-line bg-surface">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
               Pricing
             </span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight">Simple, honest pricing</h2>
@@ -288,20 +309,20 @@ export default async function Home() {
                 key={p.name}
                 className={`rounded-2xl border p-8 ${
                   p.highlight
-                    ? "border-indigo-600 bg-foreground text-white shadow-2xl shadow-indigo-900/20 ring-4 ring-indigo-600/20"
-                    : "border-line bg-[#f5f6f8]"
+                    ? "border-indigo-600 bg-foreground text-white shadow-2xl shadow-indigo-900/20 dark:bg-surface dark:text-foreground dark:border-indigo-500"
+                    : "border-line bg-canvas"
                 }`}
               >
                 <div className="flex items-baseline justify-between">
                   <h3 className="text-lg font-bold">{p.name}</h3>
-                  <p className={`text-3xl font-bold ${p.highlight ? "" : "text-foreground"}`}>
+                  <p className={`text-3xl font-bold ${p.highlight ? "dark:text-foreground" : ""}`}>
                     {p.monthly}
-                    <span className={`text-sm font-medium ${p.highlight ? "text-gray-300" : "text-muted"}`}>
+                    <span className={`text-sm font-medium ${p.highlight ? "text-gray-400 dark:text-muted" : "text-muted"}`}>
                       /mo
                     </span>
                   </p>
                 </div>
-                <p className={`mt-1 text-sm ${p.highlight ? "text-gray-300" : "text-muted"}`}>
+                <p className={`mt-1 text-sm ${p.highlight ? "text-gray-400 dark:text-muted" : "text-muted"}`}>
                   {p.tagline}
                 </p>
                 <ul className="mt-6 space-y-2.5 text-sm">
@@ -312,21 +333,23 @@ export default async function Home() {
                           p.highlight ? "bg-indigo-500" : "bg-emerald-500"
                         }`}
                       >
-                        ✓
+                        <CheckCircle2 className="h-3 w-3" />
                       </span>
-                      <span className={p.highlight ? "text-gray-200" : "text-foreground"}>{feat}</span>
+                      <span className={p.highlight ? "text-gray-200 dark:text-muted" : "text-foreground"}>
+                        {feat}
+                      </span>
                     </li>
                   ))}
                 </ul>
                 <Link
                   href={user ? "/dashboard" : "/register"}
-                  className={`mt-8 inline-flex w-full items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold transition-all active:scale-[0.98] ${
+                  className={`mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all active:scale-[0.98] ${
                     p.highlight
                       ? "bg-indigo-500 text-white hover:bg-indigo-400"
-                      : "border border-line bg-white text-foreground hover:bg-gray-50"
+                      : "border border-line bg-surface text-foreground hover:bg-gray-50 dark:hover:bg-gray-100/10"
                   }`}
                 >
-                  {p.cta}
+                  {p.cta} <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             ))}
@@ -345,19 +368,19 @@ export default async function Home() {
             </p>
             <Link
               href={user ? "/dashboard" : "/register"}
-              className="mt-8 inline-flex rounded-xl bg-white px-7 py-3 text-sm font-bold text-indigo-700 shadow-lg transition-all hover:bg-indigo-50 active:scale-[0.98]"
+              className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3 text-sm font-bold text-indigo-700 shadow-lg transition-all hover:bg-indigo-50 active:scale-[0.98]"
             >
-              {user ? "Open dashboard" : "Get started — it's free"}
+              {user ? "Open dashboard" : "Get started — it's free"} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-line bg-white">
+      <footer className="border-t border-line bg-surface">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 sm:flex-row">
           <div className="flex items-center gap-2 font-bold">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-xs font-black text-white">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-xs font-black text-surface dark:text-background">
               F
             </span>
             FormCraft

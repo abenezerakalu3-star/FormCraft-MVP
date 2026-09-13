@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function AuthShell({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-[#f5f6f8]">
+    <div className="flex min-h-screen bg-canvas">
       {/* Brand panel */}
-      <aside className="relative hidden w-[44%] flex-col justify-between overflow-hidden bg-foreground p-10 text-white lg:flex">
+      <aside className="relative hidden w-[44%] flex-col justify-between overflow-hidden bg-foreground p-10 text-white lg:flex dark:bg-surface">
         <div
           className="pointer-events-none absolute -top-32 -right-24 h-80 w-80 rounded-full opacity-40 blur-3xl"
           style={{ background: "radial-gradient(closest-side, #6366f1, transparent 70%)" }}
@@ -14,7 +14,7 @@ export default function AuthShell({ title, subtitle, children }: { title: string
           style={{ background: "radial-gradient(closest-side, #0ea5e9, transparent 70%)" }}
         />
         <Link href="/" className="relative flex items-center gap-2 text-xl font-bold">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-black text-foreground">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-black text-foreground dark:bg-background">
             F
           </span>
           FormCraft
