@@ -12,6 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
+import ThemeToggle from "@/components/theme-toggle";
 
 const features = [
   {
@@ -115,6 +116,7 @@ export default async function Home() {
             </a>
           </div>
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             {user ? (
               <Link href="/dashboard" className="btn-primary">
                 Go to dashboard

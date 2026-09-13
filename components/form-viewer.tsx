@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CheckCircle2, Send, Sparkles } from "lucide-react";
 import { splitOptions } from "@/lib/fields";
 
 interface FieldData {
@@ -59,7 +60,7 @@ export default function FormViewer({ form }: { form: FormData }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f6f8] px-4 py-12">
+    <div className="min-h-screen bg-canvas px-4 py-12">
       <div className="mx-auto max-w-xl animate-fade-up">
         {submitted ? (
           <div className="card overflow-hidden text-center">
@@ -67,19 +68,11 @@ export default function FormViewer({ form }: { form: FormData }) {
               className="h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500"
             />
             <div className="p-12">
-              <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 animate-scale-in">
-                <svg viewBox="0 0 24 24" fill="none" className="h-10 w-10 text-emerald-600">
-                  <path
-                    d="M5 13l4 4L19 7"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+              <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/10 animate-scale-in">
+                <CheckCircle2 className="h-10 w-10 text-emerald-500" />
               </div>
               <h1 className="text-2xl font-bold tracking-tight">Response submitted</h1>
-              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-gray-500">
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-muted">
                 Thank you for your response — it has been recorded successfully.
               </p>
               <button
@@ -97,18 +90,18 @@ export default function FormViewer({ form }: { form: FormData }) {
               <div className="flex items-center justify-between px-6 pt-6">
                 <h1 className="text-2xl font-bold tracking-tight">{form.title}</h1>
                 {form.fields.length > 0 && (
-                  <span className="chip bg-indigo-50 text-indigo-600">
+                  <span className="chip bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
                     {Math.min(progress, 100)}% complete
                   </span>
                 )}
               </div>
               {form.description && (
-                <p className="px-6 pb-5 pt-1 text-sm leading-relaxed text-gray-500">
+                <p className="px-6 pb-5 pt-1 text-sm leading-relaxed text-muted">
                   {form.description}
                 </p>
               )}
               {/* Progress bar */}
-              <div className="h-1.5 w-full bg-gray-100">
+              <div className="h-1.5 w-full bg-gray-100 dark:bg-gray-100/10">
                 <div
                   className="h-full bg-gradient-to-r from-indigo-500 to-sky-500 transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
@@ -171,8 +164,8 @@ export default function FormViewer({ form }: { form: FormData }) {
                             key={o}
                             className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all duration-150 cursor-pointer ${
                               selected
-                                ? "border-indigo-500 bg-indigo-50/70 text-indigo-700"
-                                : "border-line hover:border-gray-300 hover:bg-gray-50"
+                                ? "border-indigo-500 bg-indigo-500/10 text-indigo-700 dark:text-indigo-300"
+                                : "border-line hover:border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-100/5"
                             }`}
                           >
                             <input
@@ -224,7 +217,7 @@ export default function FormViewer({ form }: { form: FormData }) {
             })}
 
             {error && (
-              <p className="mb-4 animate-fade-in rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+              <p className="mb-4 animate-fade-in rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-600 dark:text-red-400">
                 {error}
               </p>
             )}
@@ -232,21 +225,27 @@ export default function FormViewer({ form }: { form: FormData }) {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full !rounded-2xl !py-3.5 disabled:opacity-50"
+              className="btn-primary flex w-full items-center justify-center gap-2 !rounded-2xl !py-3.5 disabled:opacity-50"
             >
-              {loading ? "Submitting…" : submitLabel(progress)}
+              {loading ? (
+                "Submitting…"
+              ) : progress >= 100 ? (
+                <>
+                  <Sparkles className="h-4 w-4" /> Submit form
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" /> Submit
+                </>
+              )}
             </button>
 
-            <p className="mt-6 text-center text-xs text-gray-400">
-              Powered by <span className="font-semibold text-gray-500">FormCraft</span>
+            <p className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
+              Powered by <span className="font-semibold text-gray-500 dark:text-gray-400">FormCraft</span>
             </p>
           </form>
         )}
       </div>
     </div>
   );
-}
-
-function submitLabel(progress: number) {
-  return progress >= 100 ? "Submit form ✦" : "Submit";
 }
