@@ -6,6 +6,7 @@ import {
   ClipboardList,
   Home,
   LayoutDashboard,
+  MessagesSquare,
   Newspaper,
   Settings,
   Users,
@@ -16,6 +17,7 @@ const NAV = [
   { href: "/admin/users", label: "Users", icon: Users, match: (p: string) => p.startsWith("/admin/users") },
   { href: "/admin/forms", label: "Forms", icon: ClipboardList, match: (p: string) => p.startsWith("/admin/forms") },
   { href: "/admin/blog", label: "Blog", icon: Newspaper, match: (p: string) => p.startsWith("/admin/blog") },
+  { href: "/admin/messages", label: "Messages", icon: MessagesSquare, match: (p: string) => p.startsWith("/admin/messages") },
   { href: "/admin/settings", label: "Settings", icon: Settings, match: (p: string) => p.startsWith("/admin/settings") },
 ];
 

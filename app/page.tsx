@@ -3,26 +3,28 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronDown,
+  ClipboardList,
   Coffee,
   Database,
   Download,
+  Eye,
   Inbox,
   LayoutGrid,
   Send,
   ShieldCheck,
   Sparkles,
-  Star,
   Table2,
-  Timer,
   Users,
   Zap,
 } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { getSiteSettings } from "@/lib/settings";
+import { prisma } from "@/lib/prisma";
 import ThemeToggle from "@/components/theme-toggle";
 import FadeIn from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import StatCount from "@/components/motion/stat-count";
+import SiteFooter from "@/components/site-footer";
 
 export async function generateMetadata() {
   const settings = await getSiteSettings();
@@ -125,25 +127,39 @@ const brands = [
   { name: "Monard" },
 ];
 
-const stats: { value: number; suffix?: string; label: string; icon: typeof Users; decimals?: boolean }[] = [
-  { value: 2400, suffix: "+", label: "Active creators", icon: Users },
-  { value: 86500, suffix: "+", label: "Responses collected", icon: Inbox },
-  { value: 4.9, label: "Average rating", icon: Star, decimals: true },
-  { value: 47, suffix: "s", label: "Average setup time", icon: Timer },
-];
-
-const avatars = [
-  { initials: "AM", color: "bg-indigo-500" },
-  { initials: "SK", color: "bg-emerald-500" },
-  { initials: "JT", color: "bg-amber-500" },
-  { initials: "MR", color: "bg-rose-500" },
-  { initials: "LD", color: "bg-sky-500" },
+const avatarPalette = [
+  "bg-indigo-500",
+  "bg-emerald-500",
+  "bg-amber-500",
+  "bg-rose-500",
+  "bg-sky-500",
+  "bg-violet-500",
 ];
 
 export default async function Home() {
   const user = await getSessionUser();
   const settings = await getSiteSettings();
   const homeHref = user?.role === "admin" ? "/admin" : "/dashboard";
+
+  const [creators, responses, liveForms, views, heroUsers] = await Promise.all([
+    prisma.user.count({ where: { role: "user" } }),
+    prisma.submission.count(),
+    prisma.form.count({ where: { published: true } }),
+    prisma.formView.count(),
+    prisma.user.findMany({
+      where: { role: "user", name: { not: null } },
+      orderBy: { createdAt: "asc" },
+      take: 6,
+      select: { name: true },
+    }),
+  ]);
+
+  const stats: { value: number; suffix?: string; label: string; icon: typeof Users }[] = [
+    { value: creators, suffix: "+", label: "Creators", icon: Users },
+    { value: responses, suffix: "+", label: "Responses collected", icon: Inbox },
+    { value: liveForms, label: "Live forms", icon: ClipboardList },
+    { value: views, suffix: "+", label: "Form views", icon: Eye },
+  ];
 
   return (
     <div className="min-h-screen bg-canvas text-foreground">
@@ -239,20 +255,24 @@ export default async function Home() {
             </FadeIn>
             <FadeIn delay={0.34}>
               <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
-                <div className="flex -space-x-2.5">
-                  {avatars.map((a) => (
-                    <span
-                      key={a.initials}
-                      title={a.initials}
-                      className={`flex h-8 w-8 items-center justify-center rounded-full ${a.color} text-[10px] font-bold text-white ring-2 ring-surface`}
-                    >
-                      {a.initials}
-                    </span>
-                  ))}
-                </div>
+                {heroUsers.length > 0 && (
+                  <div className="flex -space-x-2.5">
+                    {heroUsers.map((u, i) => (
+                      <span
+                        key={`${u.name}-${i}`}
+                        title={u.name || undefined}
+                        className={`flex h-8 w-8 items-center justify-center rounded-full ${avatarPalette[i % avatarPalette.length]} text-[10px] font-bold text-white ring-2 ring-surface`}
+                      >
+                        {(u.name || "").slice(0, 1).toUpperCase()}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <p className="text-sm text-muted">
-                  <span className="font-semibold text-foreground">Trusted by 2,400+ creators</span>{" "}
-                  building forms every day.
+                  <span className="font-semibold text-foreground">
+                    {creators.toLocaleString()} creator{creators === 1 ? "" : "s"}
+                  </span>{" "}
+                  building forms on {settings.siteName}.
                 </p>
               </div>
             </FadeIn>
@@ -370,11 +390,7 @@ export default async function Home() {
                   <s.icon className="h-5 w-5" />
                 </span>
                 <p className="text-3xl font-bold tracking-tight">
-                  {s.decimals ? (
-                    "4.9"
-                  ) : (
-                    <StatCount to={s.value} suffix={s.suffix ?? ""} />
-                  )}
+                  <StatCount to={s.value} suffix={s.suffix ?? ""} />
                 </p>
                 <p className="mt-1 text-sm text-muted">{s.label}</p>
               </div>
@@ -545,27 +561,7 @@ export default async function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-line bg-surface">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 sm:flex-row">
-          <div className="flex items-center gap-2 font-bold">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-xs font-black text-surface dark:text-background">
-              F
-            </span>
-            {settings.siteName}
-          </div>
-          <div className="flex items-center gap-4 text-xs text-muted">
-            <Link href="/blog" className="transition-colors hover:text-foreground">
-              Blog
-            </Link>
-            <a href={`mailto:${settings.contactEmail}`} className="transition-colors hover:text-foreground">
-              {settings.contactEmail}
-            </a>
-          </div>
-          <p className="text-xs text-muted">
-            © {new Date().getFullYear()} {settings.siteName}. {settings.footerNote}
-          </p>
-        </div>
-      </footer>
+      <SiteFooter settings={settings} />
     </div>
   );
 }

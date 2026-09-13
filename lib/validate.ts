@@ -45,3 +45,10 @@ export const blogPostSchema = z.object({
   content: z.string().min(1, "Content is required").max(50000),
   published: z.boolean().optional(),
 });
+
+export const contactSchema = z.object({
+  name: z.string().min(1, "Name is required").max(80),
+  email: z.string().email("Invalid email").max(200),
+  subject: z.string().max(150),
+  message: z.string().min(1, "Message is required").max(4000),
+});
