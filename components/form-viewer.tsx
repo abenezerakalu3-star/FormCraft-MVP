@@ -30,6 +30,13 @@ export default function FormViewer({ form }: { form: FormData }) {
     setValues((prev) => ({ ...prev, [id]: value }));
   }
 
+  const completed = form.fields.filter((f) => {
+    const v = values[f.id];
+    if (f.type === "checkbox") return v && v.split(",").length > 0;
+    return Boolean(v);
+  }).length;
+  const progress = form.fields.length ? Math.round((completed / form.fields.length) * 100) : 0;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -52,40 +59,77 @@ export default function FormViewer({ form }: { form: FormData }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] px-4 py-12">
-      <div className="mx-auto max-w-xl">
+    <div className="min-h-screen bg-[#f5f6f8] px-4 py-12">
+      <div className="mx-auto max-w-xl animate-fade-up">
         {submitted ? (
-          <div className="rounded-2xl border bg-white p-10 text-center shadow-sm">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-2xl">
-              ✓
+          <div className="card overflow-hidden text-center">
+            <div
+              className="h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500"
+            />
+            <div className="p-12">
+              <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 animate-scale-in">
+                <svg viewBox="0 0 24 24" fill="none" className="h-10 w-10 text-emerald-600">
+                  <path
+                    d="M5 13l4 4L19 7"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight">Response submitted</h1>
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-gray-500">
+                Thank you for your response — it has been recorded successfully.
+              </p>
+              <button
+                onClick={() => setSubmitted(false)}
+                className="mt-8 btn-secondary"
+              >
+                Submit another response
+              </button>
             </div>
-            <h1 className="text-xl font-bold">Response submitted</h1>
-            <p className="mt-2 text-sm text-gray-500">
-              Thank you for your response. It has been recorded.
-            </p>
-            <button
-              onClick={() => setSubmitted(false)}
-              className="mt-6 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
-            >
-              Submit another response
-            </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="rounded-2xl border bg-white p-6 shadow-sm">
-              <h1 className="text-2xl font-bold">{form.title}</h1>
+          <form onSubmit={handleSubmit}>
+            {/* Header */}
+            <div className="card mb-4 overflow-hidden">
+              <div className="flex items-center justify-between px-6 pt-6">
+                <h1 className="text-2xl font-bold tracking-tight">{form.title}</h1>
+                {form.fields.length > 0 && (
+                  <span className="chip bg-indigo-50 text-indigo-600">
+                    {Math.min(progress, 100)}% complete
+                  </span>
+                )}
+              </div>
               {form.description && (
-                <p className="mt-1 text-sm text-gray-500">{form.description}</p>
+                <p className="px-6 pb-5 pt-1 text-sm leading-relaxed text-gray-500">
+                  {form.description}
+                </p>
               )}
+              {/* Progress bar */}
+              <div className="h-1.5 w-full bg-gray-100">
+                <div
+                  className="h-full bg-gradient-to-r from-indigo-500 to-sky-500 transition-all duration-500 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <p className="px-6 py-3 text-xs text-gray-400">
+                {completed} of {form.fields.length} questions answered
+              </p>
             </div>
 
-            {form.fields.map((field) => {
+            {form.fields.map((field, i) => {
               const value = values[field.id];
               return (
-                <div key={field.id} className="rounded-2xl border bg-white p-6 shadow-sm">
-                  <label className="mb-2 block font-medium">
+                <div
+                  key={field.id}
+                  className="card mb-4 p-6 transition-all duration-200 animate-fade-up"
+                  style={{ animationDelay: `${Math.min(i, 8) * 50}ms` }}
+                >
+                  <label className="mb-2.5 block font-medium">
                     {field.label}
-                    {field.required && <span className="text-red-500"> *</span>}
+                    {field.required && <span className="ml-0.5 text-red-500">*</span>}
                   </label>
 
                   {field.type === "textarea" && (
@@ -94,7 +138,8 @@ export default function FormViewer({ form }: { form: FormData }) {
                       value={value}
                       onChange={(e) => setField(field.id, e.target.value)}
                       rows={4}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-black"
+                      placeholder="Type your answer…"
+                      className="input-field resize-none"
                     />
                   )}
 
@@ -103,7 +148,7 @@ export default function FormViewer({ form }: { form: FormData }) {
                       required={field.required}
                       value={value}
                       onChange={(e) => setField(field.id, e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-black"
+                      className="input-field appearance-none"
                     >
                       <option value="">Select an option…</option>
                       {splitOptions(field.options).map((o) => (
@@ -114,36 +159,46 @@ export default function FormViewer({ form }: { form: FormData }) {
                     </select>
                   )}
 
-                  {(field.type === "radio" || field.type === "checkbox") &&
-                    splitOptions(field.options).map((o) => {
-                      const selected =
-                        field.type === "checkbox"
-                          ? (value || "").split(",").includes(o)
-                          : value === o;
-                      return (
-                        <label key={o} className="mb-2 flex items-center gap-3 text-sm">
-                          <input
-                            type={field.type === "checkbox" ? "checkbox" : "radio"}
-                            required={field.required && !value}
-                            name={field.id}
-                            checked={selected}
-                            onChange={() => {
-                              if (field.type === "checkbox") {
-                                const current = value ? value.split(",") : [];
-                                const next = selected
-                                  ? current.filter((v) => v !== o)
-                                  : [...current, o];
-                                setField(field.id, next.join(","));
-                              } else {
-                                setField(field.id, o);
-                              }
-                            }}
-                            className="h-4 w-4"
-                          />
-                          {o}
-                        </label>
-                      );
-                    })}
+                  {(field.type === "radio" || field.type === "checkbox") && (
+                    <div className="space-y-2">
+                      {splitOptions(field.options).map((o) => {
+                        const selected =
+                          field.type === "checkbox"
+                            ? (value || "").split(",").includes(o)
+                            : value === o;
+                        return (
+                          <label
+                            key={o}
+                            className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all duration-150 cursor-pointer ${
+                              selected
+                                ? "border-indigo-500 bg-indigo-50/70 text-indigo-700"
+                                : "border-line hover:border-gray-300 hover:bg-gray-50"
+                            }`}
+                          >
+                            <input
+                              type={field.type === "checkbox" ? "checkbox" : "radio"}
+                              required={field.required && !value}
+                              name={field.id}
+                              checked={selected}
+                              onChange={() => {
+                                if (field.type === "checkbox") {
+                                  const current = value ? value.split(",") : [];
+                                  const next = selected
+                                    ? current.filter((v) => v !== o)
+                                    : [...current, o];
+                                  setField(field.id, next.join(","));
+                                } else {
+                                  setField(field.id, o);
+                                }
+                              }}
+                              className="h-4 w-4 accent-indigo-600"
+                            />
+                            {o}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
 
                   {(field.type === "text" ||
                     field.type === "email" ||
@@ -154,27 +209,44 @@ export default function FormViewer({ form }: { form: FormData }) {
                       required={field.required}
                       value={value}
                       onChange={(e) => setField(field.id, e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-black"
+                      placeholder={
+                        field.type === "email"
+                          ? "you@example.com"
+                          : field.type === "number"
+                            ? "0"
+                            : "Your answer…"
+                      }
+                      className="input-field"
                     />
                   )}
                 </div>
               );
             })}
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && (
+              <p className="mb-4 animate-fade-in rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                {error}
+              </p>
+            )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-black py-3 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50"
+              className="btn-primary w-full !rounded-2xl !py-3.5 disabled:opacity-50"
             >
-              {loading ? "Submitting…" : "Submit"}
+              {loading ? "Submitting…" : submitLabel(progress)}
             </button>
 
-            <p className="text-center text-xs text-gray-400">Powered by FormCraft</p>
+            <p className="mt-6 text-center text-xs text-gray-400">
+              Powered by <span className="font-semibold text-gray-500">FormCraft</span>
+            </p>
           </form>
         )}
       </div>
     </div>
   );
+}
+
+function submitLabel(progress: number) {
+  return progress >= 100 ? "Submit form ✦" : "Submit";
 }

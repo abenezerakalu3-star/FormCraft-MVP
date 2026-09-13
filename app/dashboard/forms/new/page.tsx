@@ -3,6 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const templates = [
+  { label: "Customer feedback", icon: "💬" },
+  { label: "Job application", icon: "🧑‍💻" },
+  { label: "Registration", icon: "📝" },
+  { label: "Quiz", icon: "🧠" },
+  { label: "Survey", icon: "📊" },
+  { label: "Contact form", icon: "✉️" },
+];
+
 export default function NewFormPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
@@ -31,29 +40,54 @@ export default function NewFormPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md pt-16">
-      <h1 className="mb-1 text-2xl font-bold">Create a new form</h1>
-      <p className="mb-6 text-sm text-gray-500">Give your form a name — you can change it later.</p>
+    <div className="mx-auto max-w-lg animate-fade-in">
+      <div className="mb-8 animate-fade-up">
+        <h1 className="text-2xl font-bold tracking-tight">Create a new form</h1>
+        <p className="mt-1 text-sm text-muted">Name it and start shaping your questions.</p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          autoFocus
-          type="text"
-          required
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="e.g. Customer Feedback"
-          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-black"
-        />
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-black py-3 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50"
-        >
-          {loading ? "Creating…" : "Create form"}
-        </button>
+      <form onSubmit={handleSubmit} className="card overflow-hidden animate-fade-up">
+        <div className="h-1.5 bg-gradient-to-r from-indigo-500 to-sky-500" />
+        <div className="p-6">
+          <label className="mb-1.5 block text-sm font-medium">Form name</label>
+          <input
+            autoFocus
+            type="text"
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="e.g. Customer Feedback"
+            className="input-field"
+          />
+          {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary mt-5 w-full disabled:opacity-50"
+          >
+            {loading ? "Creating…" : "Create form and start building"}
+          </button>
+        </div>
       </form>
+
+      <div className="mt-8">
+        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">
+          Start with a template name
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {templates.map((t) => (
+            <button
+              key={t.label}
+              type="button"
+              onClick={() => setTitle(t.label)}
+              className="inline-flex items-center gap-2 rounded-xl border border-line bg-white px-3.5 py-2 text-sm font-medium shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md active:scale-[0.98]"
+            >
+              <span>{t.icon}</span>
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

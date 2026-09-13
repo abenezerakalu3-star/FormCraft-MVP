@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AuthShell from "@/components/auth-shell";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,57 +35,54 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-6">
-      <div className="w-full max-w-sm">
-        <h1 className="mb-1 text-2xl font-bold">Welcome back</h1>
-        <p className="mb-6 text-sm text-gray-500">Log in to your FormCraft account</p>
+    <AuthShell title="Welcome back" subtitle="Log in to your FormCraft account">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="mb-1.5 block text-sm font-medium" htmlFor="email">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input-field"
+            placeholder="you@example.com"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium" htmlFor="password">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input-field"
+            placeholder="••••••••"
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm font-medium" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-black"
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium" htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-black"
-            />
-          </div>
+        {error && (
+          <p className="animate-fade-in rounded-lg bg-red-50 px-3.5 py-2.5 text-sm text-red-600">
+            {error}
+          </p>
+        )}
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+        <button type="submit" disabled={loading} className="btn-primary w-full">
+          {loading ? "Logging in…" : "Log in"}
+        </button>
+      </form>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-black py-2.5 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50"
-          >
-            {loading ? "Logging in…" : "Log in"}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-gray-500">
-          No account yet?{" "}
-          <Link href="/register" className="font-medium text-black underline">
-            Sign up
-          </Link>
-        </p>
-      </div>
-    </div>
+      <p className="mt-6 text-center text-sm text-muted">
+        No account yet?{" "}
+        <Link href="/register" className="font-semibold text-foreground underline underline-offset-4 hover:text-indigo-600">
+          Sign up
+        </Link>
+      </p>
+    </AuthShell>
   );
 }
