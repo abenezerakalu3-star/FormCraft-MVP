@@ -11,6 +11,7 @@ import {
   Copy,
   Link2,
   MousePointerClick,
+  Paperclip,
   Rocket,
   Save,
   Trash2,
@@ -80,6 +81,12 @@ function PreviewControl({ field }: { field: FieldData }) {
       return (
         <div className="mt-2 flex h-9 cursor-not-allowed items-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-3 text-sm text-gray-400 dark:border-gray-600 dark:bg-gray-100/10">
           MM/DD/YYYY
+        </div>
+      );
+    case "file":
+      return (
+        <div className="mt-2 flex cursor-not-allowed items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-3 py-3 text-sm text-gray-400 dark:border-gray-600 dark:bg-gray-100/10">
+          <Paperclip className="h-4 w-4" /> Upload area (images & docs)
         </div>
       );
     default:

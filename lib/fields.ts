@@ -6,6 +6,7 @@ import {
   Hash,
   ListChecks,
   Mail,
+  Paperclip,
   Radio,
   Type,
 } from "lucide-react";
@@ -19,6 +20,7 @@ export const FIELD_TYPES = [
   { value: "select", label: "Dropdown", icon: ChevronDown },
   { value: "radio", label: "Multiple choice", icon: Radio },
   { value: "checkbox", label: "Checkboxes", icon: ListChecks },
+  { value: "file", label: "File upload", icon: Paperclip },
 ] as const;
 
 export type FieldType = (typeof FIELD_TYPES)[number]["value"];

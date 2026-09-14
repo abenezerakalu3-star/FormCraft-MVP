@@ -13,7 +13,7 @@ export const loginSchema = z.object({
 
 export const formFieldSchema = z.object({
   id: z.string().min(1),
-  type: z.enum(["text", "textarea", "email", "number", "select", "radio", "checkbox", "date"]),
+  type: z.enum(["text", "textarea", "email", "number", "select", "radio", "checkbox", "date", "file"]),
   label: z.string().min(1, "Label is required").max(200),
   required: z.boolean().default(false),
   options: z.string().max(2000).default(""),

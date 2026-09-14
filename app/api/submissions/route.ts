@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { submissionSchema } from "@/lib/validate";
 import { splitOptions } from "@/lib/fields";
+import { parseFileValue } from "@/lib/files";
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
@@ -41,6 +42,18 @@ export async function POST(req: Request) {
 
     if (field.type === "email" && data[field.id] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data[field.id])) {
       return NextResponse.json({ error: `Invalid email for "${field.label}"` }, { status: 400 });
+    }
+
+    if (field.type === "file" && data[field.id]) {
+      const file = parseFileValue(data[field.id]);
+      if (
+        !file ||
+        !file.url.startsWith("/uploads/") ||
+        !file.name ||
+        typeof file.size !== "number"
+      ) {
+        return NextResponse.json({ error: `Invalid file for "${field.label}"` }, { status: 400 });
+      }
     }
   }
 

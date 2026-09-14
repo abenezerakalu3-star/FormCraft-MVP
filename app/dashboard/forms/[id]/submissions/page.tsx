@@ -1,10 +1,43 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Inbox } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileText, Inbox } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
+import { formatBytes, IMAGE_MIMES, parseFileValue } from "@/lib/files";
 import CopyButton from "@/components/copy-button";
 import ExportCsv from "@/components/export-csv";
+
+function FileCell({ value }: { value: string }) {
+  const file = parseFileValue(value);
+  if (!file) return <span className="line-clamp-2">{value}</span>;
+
+  const isImage = IMAGE_MIMES.includes(file.mime);
+  return (
+    <a
+      href={file.url}
+      target="_blank"
+      rel="noreferrer"
+      className="group flex items-center gap-2.5"
+      title={`${file.name} (${formatBytes(file.size)})`}
+    >
+      {isImage ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={file.url}
+          alt={file.name}
+          className="h-9 w-9 shrink-0 rounded-lg object-cover"
+        />
+      ) : (
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+          <FileText className="h-4 w-4" />
+        </span>
+      )}
+      <span className="line-clamp-2 max-w-[14rem] text-indigo-600 group-hover:underline dark:text-indigo-400">
+        {file.name}
+      </span>
+    </a>
+  );
+}
 
 export default async function SubmissionsPage({
   params,
@@ -163,6 +196,8 @@ export default async function SubmissionsPage({
                                 </span>
                               ))}
                             </div>
+                          ) : field.type === "file" && value ? (
+                            <FileCell value={value} />
                           ) : value ? (
                             <span className="line-clamp-2">{value}</span>
                           ) : (

@@ -1,3 +1,5 @@
+import { formatFileCell, isFileValue } from "@/lib/files";
+
 export interface ExportField {
   id: string;
   label: string;
@@ -25,7 +27,11 @@ export function exportHeader(fields: ExportField[]) {
 export function exportRowValues(r: ExportRow, fields: ExportField[]) {
   return [
     new Date(r.createdAt).toISOString(),
-    ...fields.map((f) => r.data[f.id] ?? ""),
+    ...fields.map((f) => {
+      const v = r.data[f.id];
+      if (v === undefined || v === null) return "";
+      return isFileValue(v) ? formatFileCell(v) : v;
+    }),
   ];
 }
 

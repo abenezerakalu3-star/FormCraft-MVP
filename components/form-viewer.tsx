@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CheckCircle2, Send, Sparkles } from "lucide-react";
 import { splitOptions } from "@/lib/fields";
 import Celebration from "@/components/celebration";
+import FileUploadField from "@/components/file-upload-field";
 
 interface FieldData {
   id: string;
@@ -210,6 +211,14 @@ export default function FormViewer({ form }: { form: FormData }) {
                         );
                       })}
                     </div>
+                  )}
+
+                  {field.type === "file" && (
+                    <FileUploadField
+                      required={field.required}
+                      value={value}
+                      onChange={(v) => setField(field.id, v ?? "")}
+                    />
                   )}
 
                   {(field.type === "text" ||
