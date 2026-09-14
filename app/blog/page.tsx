@@ -4,12 +4,22 @@ import { getSiteSettings } from "@/lib/settings";
 import { prisma } from "@/lib/prisma";
 import FadeIn from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
+import ThemeToggle from "@/components/theme-toggle";
+import MobileMenu from "@/components/mobile-menu";
 
 export async function generateMetadata() {
   const settings = await getSiteSettings();
   return {
     title: `Blog — ${settings.siteName}`,
     description: `Articles, tips, and updates from ${settings.siteName}.`,
+    alternates: { canonical: "/blog" },
+    openGraph: {
+      title: `Blog — ${settings.siteName}`,
+      description: `Articles, tips, and updates from ${settings.siteName}.`,
+      type: "website",
+      siteName: settings.siteName,
+      url: "/blog",
+    },
   };
 }
 
@@ -31,14 +41,26 @@ export default async function BlogPage() {
             </span>
             {settings.siteName}
           </Link>
-          <nav className="flex items-center gap-6 text-sm font-medium text-muted">
+          <nav className="hidden items-center gap-6 text-sm font-medium text-muted md:flex">
             <Link href="/" className="transition-colors hover:text-foreground">
               Home
             </Link>
-            <Link href="/register" className="btn-primary !py-2 text-sm">
-              Start free
-            </Link>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <Link href="/register" className="btn-primary !py-2 text-sm">
+                Start free
+              </Link>
+            </div>
           </nav>
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <MobileMenu
+              items={[
+                { href: "/", label: "Home" },
+                { href: "/register", label: "Start free" },
+              ]}
+            />
+          </div>
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import DashboardWarningBanner from "@/components/dashboard-warning-banner";
+import DashboardHeader from "@/components/dashboard-header";
 import DashboardUserMenu from "@/components/dashboard-user-menu";
 import ThemeToggle from "@/components/theme-toggle";
 
@@ -24,20 +25,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               </span>
               FormCraft
             </Link>
-            <nav className="hidden items-center gap-6 text-sm font-medium text-muted md:flex">
-              <Link
-                href="/dashboard"
-                className="rounded-lg px-3 py-1.5 text-foreground transition-colors hover:bg-gray-100 dark:hover:bg-gray-100/10"
-              >
-                My forms
-              </Link>
-              <Link
-                href="/dashboard/forms/new"
-                className="rounded-lg px-3 py-1.5 transition-colors hover:bg-gray-100 hover:text-foreground dark:hover:bg-gray-100/10"
-              >
-                New form
-              </Link>
-            </nav>
+            <DashboardHeader />
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />

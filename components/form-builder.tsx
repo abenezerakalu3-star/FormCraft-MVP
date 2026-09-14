@@ -265,9 +265,9 @@ export default function FormBuilder({ form }: { form: FormData }) {
         </div>
       </div>
 
-      <div className="flex items-start gap-6">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         {/* Palette */}
-        <aside className="sticky top-36 w-48 shrink-0">
+        <aside className="hidden lg:sticky lg:top-36 lg:block lg:w-48 lg:shrink-0">
           <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">
             Add a field
           </p>
@@ -295,6 +295,30 @@ export default function FormBuilder({ form }: { form: FormData }) {
 
         {/* Canvas */}
         <div className="min-w-0 flex-1 space-y-4">
+          {/* Mobile field palette */}
+          <div className="-mx-2 overflow-x-auto pb-1 lg:hidden">
+            <p className="mb-2 px-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+              Add a field
+            </p>
+            <div className="flex gap-2 px-2">
+              {FIELD_TYPES.map((ft) => {
+                const Icon = ft.icon;
+                return (
+                  <button
+                    key={ft.value}
+                    onClick={() => addField(ft.value)}
+                    className="flex shrink-0 items-center gap-2 rounded-xl border border-line bg-surface px-3 py-2 text-sm font-medium shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 active:scale-[0.98]"
+                  >
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                      <Icon className="h-3.5 w-3.5" />
+                    </span>
+                    {ft.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="card overflow-hidden animate-fade-in">
             <div className="h-1.5 bg-accent" />
             <div className="p-6">
@@ -322,7 +346,7 @@ export default function FormBuilder({ form }: { form: FormData }) {
               <div className="mb-3 flex justify-center">
                 <MousePointerClick className="h-7 w-7 text-gray-400" />
               </div>
-              Add your first field from the left panel.
+              Add your first field from the palette to get started.
             </div>
           )}
 
@@ -428,7 +452,7 @@ export default function FormBuilder({ form }: { form: FormData }) {
         </div>
 
         {/* Inspector */}
-        <aside className="sticky top-36 w-64 shrink-0">
+        <aside className="w-full lg:sticky lg:top-36 lg:w-64 lg:shrink-0">
           <div className="card p-5">
             {selected ? (
               <div key={selected.id} className="animate-scale-in">

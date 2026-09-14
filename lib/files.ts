@@ -1,5 +1,6 @@
 export interface UploadedFile {
   url: string;
+  key?: string;
   name: string;
   size: number;
   mime: string;

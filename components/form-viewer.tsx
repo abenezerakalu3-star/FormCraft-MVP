@@ -133,7 +133,7 @@ export default function FormViewer({ form }: { form: FormData }) {
             </div>
 
             {form.fields.map((field, i) => {
-              const value = values[field.id];
+              const value = values[field.id] ?? "";
               return (
                 <div
                   key={field.id}

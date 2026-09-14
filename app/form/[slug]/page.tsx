@@ -2,6 +2,23 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import FormViewer from "@/components/form-viewer";
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const form = await prisma.form
+    .findUnique({
+      where: { slug },
+      select: { title: true, description: true, published: true },
+    })
+    .catch(() => null);
+  if (!form || !form.published) return { title: "Form not found" };
+  return {
+    title: form.title,
+    description: form.description || `Fill out this form and submit your response.`,
+    alternates: { canonical: `/form/${slug}` },
+    robots: { index: true, follow: true },
+  };
+}
+
 export default async function PublicFormPage({
   params,
 }: {

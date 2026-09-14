@@ -48,9 +48,9 @@ export async function POST(req: Request) {
       const file = parseFileValue(data[field.id]);
       if (
         !file ||
-        !file.url.startsWith("/uploads/") ||
         !file.name ||
-        typeof file.size !== "number"
+        typeof file.size !== "number" ||
+        (!file.url.startsWith("/uploads/") && !file.url.startsWith("/api/files"))
       ) {
         return NextResponse.json({ error: `Invalid file for "${field.label}"` }, { status: 400 });
       }

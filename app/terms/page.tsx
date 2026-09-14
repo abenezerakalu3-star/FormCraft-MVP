@@ -1,6 +1,12 @@
 import { getSiteSettings } from "@/lib/settings";
 import PublicShell from "@/components/public-shell";
 
+export const metadata = {
+  title: "Terms of Service",
+  description: "The terms and conditions that govern your use of FormCraft.",
+  robots: { index: true, follow: true },
+};
+
 const sections = [
   {
     title: "The service",
@@ -21,10 +27,6 @@ const sections = [
   {
     title: "Google sign-in",
     body: "Signing in with Google is optional. By using it you authorize us to receive and store the name and email associated with your Google account, as described in our Privacy Policy.",
-  },
-  {
-    title: "Billing and subscriptions",
-    body: "Paid plans are billed in advance and may be cancelled at any time. Usage continue until the end of the current billing period. Fees are non-refundable unless required by law.",
   },
   {
     title: "Uptime and availability",

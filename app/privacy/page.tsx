@@ -1,6 +1,12 @@
 import { getSiteSettings } from "@/lib/settings";
 import PublicShell from "@/components/public-shell";
 
+export const metadata = {
+  title: "Privacy Policy",
+  description: "How FormCraft collects, uses, and protects your personal data.",
+  robots: { index: true, follow: true },
+};
+
 const sections = [
   {
     title: "Information we collect",

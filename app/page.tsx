@@ -24,13 +24,27 @@ import FadeIn from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import StatCount from "@/components/motion/stat-count";
 import SiteFooter from "@/components/site-footer";
-import PricingSection from "@/components/pricing-section";
+import BuyMeCoffeeButton from "@/components/buy-me-coffee-button";
+import MobileMenu from "@/components/mobile-menu";
 
 export async function generateMetadata() {
   const settings = await getSiteSettings();
+  const desc = `${settings.tagline} Free forever.`;
   return {
     title: `${settings.siteName} — ${settings.tagline}`,
-    description: settings.tagline,
+    description: desc,
+    alternates: { canonical: "/" },
+    openGraph: {
+      title: `${settings.siteName} — ${settings.tagline}`,
+      description: desc,
+      type: "website",
+      siteName: settings.siteName,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${settings.siteName} — ${settings.tagline}`,
+      description: desc,
+    },
   };
 }
 
@@ -154,15 +168,12 @@ export default async function Home() {
             </span>
             {settings.siteName}
           </Link>
-          <div className="hidden items-center gap-7 text-sm font-medium text-muted sm:flex">
+          <div className="hidden items-center gap-7 text-sm font-medium text-muted md:flex">
             <a href="#features" className="transition-colors hover:text-foreground">
               Features
             </a>
             <a href="#how" className="transition-colors hover:text-foreground">
               How it works
-            </a>
-            <a href="#pricing" className="transition-colors hover:text-foreground">
-              Pricing
             </a>
             <Link href="/blog" className="transition-colors hover:text-foreground">
               Blog
@@ -171,19 +182,32 @@ export default async function Home() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             {user ? (
-              <Link href={homeHref} className="btn-primary">
+              <Link href={homeHref} className="hidden btn-primary sm:inline-flex">
                 {user?.role === "admin" ? "Go to admin" : "Go to dashboard"}
               </Link>
             ) : (
               <>
-                <Link href="/login" className="text-sm font-medium text-muted hover:text-foreground">
+                <Link href="/login" className="hidden text-sm font-medium text-muted hover:text-foreground sm:inline-flex">
                   Log in
                 </Link>
-                <Link href="/register" className="btn-primary">
+                <Link href="/register" className="hidden btn-primary sm:inline-flex">
                   Start free
                 </Link>
               </>
             )}
+            <MobileMenu
+              items={[
+                { href: "#features", label: "Features" },
+                { href: "#how", label: "How it works" },
+                { href: "/blog", label: "Blog" },
+                ...(user
+                  ? [{ href: homeHref, label: user.role === "admin" ? "Go to admin" : "Go to dashboard" }]
+                  : [
+                      { href: "/login", label: "Log in" },
+                      { href: "/register", label: "Start free" },
+                    ]),
+              ]}
+            />
           </div>
         </div>
       </nav>
@@ -208,7 +232,7 @@ export default async function Home() {
               </div>
             </FadeIn>
             <FadeIn delay={0.08}>
-              <h1 className="text-5xl font-bold leading-[1.04] tracking-tight">
+              <h1 className="text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl sm:leading-[1.04]">
                 {settings.heroTitle}{" "}
                 <span className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 bg-clip-text text-transparent dark:from-indigo-400 dark:via-indigo-300 dark:to-sky-400">
                   in minutes
@@ -440,9 +464,6 @@ export default async function Home() {
         </Stagger>
       </section>
 
-      {/* Pricing */}
-      <PricingSection homeHref={homeHref} />
-
       {/* Final CTA */}
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <FadeIn>
@@ -467,6 +488,9 @@ export default async function Home() {
                 <Download className="h-3.5 w-3.5" /> Export your first CSV in under a minute
               </p>
             </div>
+          </div>
+          <div className="mt-6 flex justify-center">
+            <BuyMeCoffeeButton />
           </div>
         </FadeIn>
       </section>

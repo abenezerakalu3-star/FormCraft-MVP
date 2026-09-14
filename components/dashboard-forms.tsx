@@ -41,16 +41,6 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
     });
   }, [forms, query, filter]);
 
-  const totals = useMemo(
-    () => ({
-      forms: forms.length,
-      submissions: forms.reduce((n, f) => n + f._count.submissions, 0),
-      live: forms.filter((f) => f.published).length,
-      drafts: forms.filter((f) => !f.published).length,
-    }),
-    [forms]
-  );
-
   async function handleDelete(id: string, title: string) {
     if (!confirm(`Delete "${title}" and all its submissions? This cannot be undone.`)) return;
     setDeleting(id);
@@ -63,29 +53,8 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
     }
   }
 
-  const stats = [
-    { label: "Total forms", value: totals.forms, tone: "text-foreground" },
-    { label: "Total responses", value: totals.submissions, tone: "text-indigo-600 dark:text-indigo-400" },
-    { label: "Live", value: totals.live, tone: "text-emerald-600 dark:text-emerald-400" },
-    { label: "Drafts", value: totals.drafts, tone: "text-muted" },
-  ];
-
   return (
     <div className="animate-fade-in">
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {stats.map((s, i) => (
-          <div
-            key={s.label}
-            className="card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5"
-            style={{ animationDelay: `${i * 60}ms` }}
-          >
-            <p className="text-sm text-muted">{s.label}</p>
-            <p className={`mt-1 text-3xl font-bold ${s.tone}`}>{s.value}</p>
-          </div>
-        ))}
-      </div>
-
       {/* Toolbar */}
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
         <div className="relative">
@@ -177,14 +146,40 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
                       {form.published ? "Live" : "Draft"}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-muted">
-                    {form._count.views} view{form._count.views === 1 ? "" : "s"} ·{" "}
-                    {form._count.submissions} response{form._count.submissions === 1 ? "" : "s"}
+                  <p className="mt-2 flex items-center gap-x-3 text-sm text-muted">
+                    <span>{form._count.views} view{form._count.views === 1 ? "" : "s"}</span>
+                    <span aria-hidden>·</span>
+                    <span>
+                      {form._count.submissions} response{form._count.submissions === 1 ? "" : "s"}
+                    </span>
                     {form._count.fields > 0 && (
-                      <> · {form._count.fields} field{form._count.fields === 1 ? "" : "s"}</>
+                      <>
+                        <span aria-hidden>·</span>
+                        <span>{form._count.fields} field{form._count.fields === 1 ? "" : "s"}</span>
+                      </>
                     )}
                   </p>
-                  <p className="mt-0.5 text-xs text-gray-400">
+
+                  {form._count.views > 0 && (
+                    <div className="mt-3">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted">Response rate</span>
+                        <span className="font-semibold text-foreground">
+                          {Math.round((form._count.submissions / form._count.views) * 100)}%
+                        </span>
+                      </div>
+                      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-100/10">
+                        <div
+                          className="h-full rounded-full bg-accent transition-all duration-500"
+                          style={{
+                            width: `${Math.min(100, Math.round((form._count.submissions / form._count.views) * 100))}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <p className="mt-3 text-xs text-gray-400">
                     Created{" "}
                     {new Date(form.createdAt).toLocaleDateString(undefined, {
                       month: "short",

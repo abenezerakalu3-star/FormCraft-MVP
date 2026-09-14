@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SiteSettings } from "@/lib/settings";
 import ThemeToggle from "@/components/theme-toggle";
+import MobileMenu from "@/components/mobile-menu";
 import SiteFooter from "@/components/site-footer";
 
 export default function PublicShell({
@@ -20,7 +21,7 @@ export default function PublicShell({
             </span>
             {settings.siteName}
           </Link>
-          <nav className="flex items-center gap-6 text-sm font-medium text-muted">
+          <nav className="hidden items-center gap-6 text-sm font-medium text-muted md:flex">
             <Link href="/" className="transition-colors hover:text-foreground">
               Home
             </Link>
@@ -34,6 +35,16 @@ export default function PublicShell({
               </Link>
             </div>
           </nav>
+          <div className="flex items-center gap-3 md:hidden">
+            <ThemeToggle />
+            <MobileMenu
+              items={[
+                { href: "/", label: "Home" },
+                { href: "/blog", label: "Blog" },
+                { href: "/register", label: "Start free" },
+              ]}
+            />
+          </div>
         </div>
       </header>
       <main className="flex-1">{children}</main>

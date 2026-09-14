@@ -3,15 +3,29 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { getSiteSettings } from "@/lib/settings";
 import { prisma } from "@/lib/prisma";
+import ThemeToggle from "@/components/theme-toggle";
+import MobileMenu from "@/components/mobile-menu";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await prisma.blogPost.findFirst({ where: { slug, published: true } }).catch(() => null);
+  const post = await prisma.blogPost
+    .findFirst({ where: { slug, published: true }, include: { author: { select: { name: true } } } })
+    .catch(() => null);
   if (!post) return { title: "Not found" };
+  const excerpt = post.excerpt || undefined;
   return {
-    title: `${post.title} — Blog`,
-    description: post.excerpt || undefined,
-    openGraph: { title: post.title, description: post.excerpt || undefined, type: "article" },
+    title: post.title,
+    description: excerpt,
+    alternates: { canonical: `/blog/${slug}` },
+    openGraph: {
+      title: post.title,
+      description: excerpt,
+      type: "article",
+      url: `/blog/${slug}`,
+      publishedTime: post.createdAt.toISOString(),
+      authors: post.author?.name ? [post.author.name] : undefined,
+    },
+    twitter: { card: "summary_large_image", title: post.title, description: excerpt },
   };
 }
 
@@ -35,14 +49,26 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </span>
             {settings.siteName}
           </Link>
-          <nav className="flex items-center gap-6 text-sm font-medium text-muted">
+          <nav className="hidden items-center gap-6 text-sm font-medium text-muted md:flex">
             <Link href="/blog" className="transition-colors hover:text-foreground">
               Blog
             </Link>
-            <Link href="/register" className="btn-primary !py-2 text-sm">
-              Start free
-            </Link>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <Link href="/register" className="btn-primary !py-2 text-sm">
+                Start free
+              </Link>
+            </div>
           </nav>
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <MobileMenu
+              items={[
+                { href: "/blog", label: "Blog" },
+                { href: "/register", label: "Start free" },
+              ]}
+            />
+          </div>
         </div>
       </div>
 

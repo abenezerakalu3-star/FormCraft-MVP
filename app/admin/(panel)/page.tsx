@@ -77,12 +77,12 @@ export default async function AdminHomePage() {
   }));
 
   const stats = [
-    { label: "Total users", value: users, icon: Users, tone: "text-indigo-600 dark:text-indigo-400", sub: `${blockedUsers} blocked` },
-    { label: "Responses", value: submissions, icon: Inbox, tone: "text-emerald-600 dark:text-emerald-400" },
-    { label: "Total visitors", value: views, icon: Eye, tone: "text-sky-600 dark:text-sky-400" },
-    { label: "Live forms", value: liveForms, icon: Globe, tone: "text-emerald-600 dark:text-emerald-400" },
-    { label: "Draft forms", value: forms - liveForms, icon: FileText, tone: "text-amber-600 dark:text-amber-400" },
-    { label: "Blog posts", value: blogPosts, icon: Newspaper, tone: "text-violet-600 dark:text-violet-400", sub: `${publishedPosts} published` },
+    { label: "Total users", value: users, icon: Users, tone: "text-indigo-600 dark:text-indigo-400", bg: "bg-indigo-500/10", sub: `${blockedUsers} blocked` },
+    { label: "Responses", value: submissions, icon: Inbox, tone: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-500/10" },
+    { label: "Total visitors", value: views, icon: Eye, tone: "text-sky-600 dark:text-sky-400", bg: "bg-sky-500/10" },
+    { label: "Live forms", value: liveForms, icon: Globe, tone: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-500/10" },
+    { label: "Draft forms", value: forms - liveForms, icon: FileText, tone: "text-amber-600 dark:text-amber-400", bg: "bg-amber-500/10" },
+    { label: "Blog posts", value: blogPosts, icon: Newspaper, tone: "text-violet-600 dark:text-violet-400", bg: "bg-violet-500/10", sub: `${publishedPosts} published` },
   ];
 
   const quickLinks = [
@@ -101,12 +101,22 @@ export default async function AdminHomePage() {
     <div className="animate-fade-in">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-3 animate-fade-up">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted">
+            Control center
+          </p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight">
             Welcome back, {admin.name?.split(" ")[0] || "Admin"}
           </h1>
           <p className="mt-1 text-sm text-muted">
             Here is what is happening across FormCraft today.
           </p>
+        </div>
+        <div className="flex items-center gap-2 rounded-2xl border border-line bg-surface px-4 py-2.5 shadow-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          </span>
+          <span className="text-sm font-medium text-muted">All systems operational</span>
         </div>
       </div>
 
@@ -136,13 +146,15 @@ export default async function AdminHomePage() {
         {stats.map((s, i) => (
           <div
             key={s.label}
-            className="card p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5"
+            className="group card p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5"
             style={{ animationDelay: `${i * 50}ms` }}
           >
-            <span className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-              <s.icon className="h-4 w-4" />
+            <span
+              className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl ${s.bg} transition-transform duration-300 group-hover:scale-110`}
+            >
+              <s.icon className={`h-4 w-4 ${s.tone}`} />
             </span>
-            <p className={`text-2xl font-bold ${s.tone}`}>{s.value}</p>
+            <p className={`text-2xl font-bold ${s.tone}`}>{s.value.toLocaleString()}</p>
             <p className="text-xs text-muted">
               {s.label}
               {s.sub ? <span className="text-gray-400"> · {s.sub}</span> : null}

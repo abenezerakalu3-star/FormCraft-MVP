@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Heart, Mail } from "lucide-react";
 import { SiteSettings } from "@/lib/settings";
+import BuyMeCoffeeButton from "@/components/buy-me-coffee-button";
 
 export default function SiteFooter({ settings }: { settings: SiteSettings }) {
   const links = [
@@ -9,7 +10,6 @@ export default function SiteFooter({ settings }: { settings: SiteSettings }) {
       items: [
         { label: "Features", href: "/#features" },
         { label: "How it works", href: "/#how" },
-        { label: "Pricing", href: "/#pricing" },
         { label: "Blog", href: "/blog" },
       ],
     },
@@ -68,6 +68,7 @@ export default function SiteFooter({ settings }: { settings: SiteSettings }) {
           <p className="text-xs text-muted">
             © {new Date().getFullYear()} {settings.siteName}. {settings.footerNote}
           </p>
+          <BuyMeCoffeeButton />
           <p className="flex items-center gap-1.5 text-xs text-muted">
             Built with <Heart className="h-3.5 w-3.5 fill-red-500 text-red-500" /> for people who love
             good forms.

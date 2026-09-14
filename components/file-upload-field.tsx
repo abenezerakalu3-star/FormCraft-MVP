@@ -45,7 +45,7 @@ export default function FileUploadField({
     return (
       <div className="animate-fade-in">
         <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-3 dark:border-emerald-500/30 dark:bg-emerald-500/10">
-          {isImage && file.url.startsWith("/uploads/") ? (
+          {isImage && (file.url.startsWith("/uploads/") || file.url.startsWith("/api/files")) ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={file.url}

@@ -3,6 +3,12 @@ import { getSiteSettings } from "@/lib/settings";
 import PublicShell from "@/components/public-shell";
 import ContactForm from "@/components/contact-form";
 
+export const metadata = {
+  title: "Contact",
+  description: "Have a question, idea, or feedback? Get in touch with the FormCraft team.",
+  robots: { index: true, follow: true },
+};
+
 export default async function ContactPage() {
   const settings = await getSiteSettings();
 
