@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Newspaper } from "lucide-react";
-import { requireAdmin } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminBlogManager, { AdminBlogPost } from "@/components/admin/admin-blog-manager";
 
 export default async function AdminBlogPage() {
-  await requireAdmin();
+  await requirePermission("blog");
 
   const posts = await prisma.blogPost.findMany({
     orderBy: { createdAt: "desc" },

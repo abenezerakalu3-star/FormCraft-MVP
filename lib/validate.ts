@@ -52,3 +52,20 @@ export const contactSchema = z.object({
   subject: z.string().max(150),
   message: z.string().min(1, "Message is required").max(4000),
 });
+
+export const createAdminSchema = z.object({
+  name: z.string().min(1, "Name is required").max(80),
+  email: z.string().email("Invalid email").max(200),
+  password: z.string().min(8, "Password must be at least 8 characters").max(128),
+  permissions: z.array(z.string()).min(1, "Pick at least one authority"),
+});
+
+export const updateProfileSchema = z.object({
+  name: z.string().min(1, "Name is required").max(80),
+  email: z.string().email("Invalid email").max(200),
+});
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required"),
+  newPassword: z.string().min(8, "New password must be at least 8 characters").max(128),
+});

@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
 
 type Warning = { message: string; by: string; at: string };
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const admin = await requireAdmin();
+  const admin = await requirePermission("users");
   const { id } = await params;
 
   const target = await prisma.user.findUnique({ where: { id } });

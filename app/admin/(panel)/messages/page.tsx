@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Inbox, Mail, MessagesSquare } from "lucide-react";
-import { requireAdmin } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminMessagesList, { ContactMessageItem } from "@/components/admin/admin-messages-list";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminMessagesPage() {
-  await requireAdmin();
+  await requirePermission("messages");
 
   const [total, withSubject, messages] = await Promise.all([
     prisma.contactMessage.count(),

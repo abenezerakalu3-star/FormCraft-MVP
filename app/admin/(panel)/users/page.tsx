@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { AlertTriangle, Ban, Users } from "lucide-react";
-import { requireAdmin } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminUsersList, { AdminUser } from "@/components/admin/admin-users-list";
 
 export default async function AdminUsersPage() {
-  await requireAdmin();
+  await requirePermission("users");
 
   const [users, total, blocked] = await Promise.all([
     prisma.user.findMany({

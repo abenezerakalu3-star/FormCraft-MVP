@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
 import { blogPostSchema } from "@/lib/validate";
 import { slugify } from "@/lib/slugify";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const admin = await requireAdmin();
+  const admin = await requirePermission("blog");
   const { id } = await params;
 
   const post = await prisma.blogPost.findUnique({ where: { id } });
@@ -44,7 +44,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  await requireAdmin();
+  await requirePermission("blog");
   const { id } = await params;
 
   const post = await prisma.blogPost.findUnique({ where: { id } });

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { FileText, Globe, Inbox } from "lucide-react";
-import { requireAdmin } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminFormsList, { AdminForm } from "@/components/admin/admin-forms-list";
 
 export default async function AdminFormsPage() {
-  await requireAdmin();
+  await requirePermission("forms");
 
   const [forms, total, live] = await Promise.all([
     prisma.form.findMany({

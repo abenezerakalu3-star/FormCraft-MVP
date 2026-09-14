@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  CheckCircle2,
   ChevronDown,
   ClipboardList,
   Coffee,
@@ -25,6 +24,7 @@ import FadeIn from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import StatCount from "@/components/motion/stat-count";
 import SiteFooter from "@/components/site-footer";
+import PricingSection from "@/components/pricing-section";
 
 export async function generateMetadata() {
   const settings = await getSiteSettings();
@@ -88,31 +88,6 @@ const steps = [
     n: "03",
     title: "Collect",
     desc: "Watch responses stream into a tidy, filterable dashboard.",
-  },
-];
-
-const prices = [
-  {
-    name: "Starter",
-    monthly: "$0",
-    tagline: "For trying it out and small projects",
-    features: ["Unlimited forms", "1,000 responses / month", "All 8 field types", "CSV export"],
-    cta: "Start free",
-    highlight: false,
-  },
-  {
-    name: "Pro",
-    monthly: "$12",
-    tagline: "For creators and small teams",
-    features: [
-      "Everything in Starter",
-      "Unlimited responses",
-      "Custom subdomain",
-      "Team members",
-      "Priority support",
-    ],
-    cta: "Start 14-day trial",
-    highlight: true,
   },
 ];
 
@@ -466,71 +441,7 @@ export default async function Home() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="border-t border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <FadeIn>
-            <div className="text-center">
-              <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">
-                Pricing
-              </span>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight">Simple, honest pricing</h2>
-              <p className="mt-3 text-muted">Start free, upgrade when you grow.</p>
-            </div>
-          </FadeIn>
-          <div className="mx-auto mt-12 grid max-w-3xl gap-6 md:grid-cols-2">
-            {prices.map((p, idx) => (
-              <FadeIn key={p.name} delay={idx * 0.12}>
-                <div
-                  className={`h-full rounded-2xl border p-8 ${
-                    p.highlight
-                      ? "border-indigo-600 bg-foreground text-white shadow-2xl shadow-indigo-900/20 dark:bg-surface dark:text-foreground dark:border-indigo-500"
-                      : "border-line bg-canvas"
-                  }`}
-                >
-                  <div className="flex items-baseline justify-between">
-                    <h3 className="text-lg font-bold">{p.name}</h3>
-                    <p className={`text-3xl font-bold ${p.highlight ? "dark:text-foreground" : ""}`}>
-                      {p.monthly}
-                      <span className={`text-sm font-medium ${p.highlight ? "text-gray-400 dark:text-muted" : "text-muted"}`}>
-                        /mo
-                      </span>
-                    </p>
-                  </div>
-                  <p className={`mt-1 text-sm ${p.highlight ? "text-gray-400 dark:text-muted" : "text-muted"}`}>
-                    {p.tagline}
-                  </p>
-                  <ul className="mt-6 space-y-2.5 text-sm">
-                    {p.features.map((feat) => (
-                      <li key={feat} className="flex items-center gap-2.5">
-                        <span
-                          className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white ${
-                            p.highlight ? "bg-indigo-500" : "bg-emerald-500"
-                          }`}
-                        >
-                          <CheckCircle2 className="h-3 w-3" />
-                        </span>
-                        <span className={p.highlight ? "text-gray-200 dark:text-muted" : "text-foreground"}>
-                          {feat}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href={homeHref}
-                    className={`mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all active:scale-[0.98] ${
-                      p.highlight
-                        ? "bg-indigo-500 text-white hover:bg-indigo-400"
-                        : "border border-line bg-surface text-foreground hover:bg-gray-50 dark:hover:bg-gray-100/10"
-                    }`}
-                  >
-                    {p.cta} <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PricingSection homeHref={homeHref} />
 
       {/* Final CTA */}
       <section className="mx-auto max-w-6xl px-6 pb-24">

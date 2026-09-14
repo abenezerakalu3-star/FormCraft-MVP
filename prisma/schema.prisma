@@ -15,6 +15,7 @@ model User {
   role      String     @default("user")
   blocked   Boolean    @default(false)
   warnings  Json       @default("[]")
+  permissions Json    @default("[]")
   createdAt DateTime   @default(now())
   forms     Form[]
   posts     BlogPost[]

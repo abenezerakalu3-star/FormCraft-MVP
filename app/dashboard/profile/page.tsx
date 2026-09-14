@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowLeft, CalendarDays, Mail, ShieldCheck, UserRound } from "lucide-react";
+import { AlertTriangle, ArrowLeft, ShieldCheck } from "lucide-react";
 import { requireUser } from "@/lib/auth";
+import ProfileEditor from "@/components/profile-editor";
 
 export default async function ProfilePage() {
   const user = await requireUser();
@@ -44,41 +45,8 @@ export default async function ProfilePage() {
           )}
         </div>
 
-        <div className="card overflow-hidden">
-          <div className="border-b border-line px-6 py-4">
-            <h2 className="font-bold tracking-tight">Account info</h2>
-          </div>
-          <dl className="divide-y divide-line text-sm">
-            <div className="flex items-start gap-3.5 px-6 py-4">
-              <UserRound className="mt-0.5 h-4 w-4 text-muted" />
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-widest text-muted">Name</dt>
-                <dd className="mt-0.5 font-medium">{user.name || "—"}</dd>
-              </div>
-            </div>
-            <div className="flex items-start gap-3.5 px-6 py-4">
-              <Mail className="mt-0.5 h-4 w-4 text-muted" />
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-widest text-muted">Email</dt>
-                <dd className="mt-0.5 font-medium">{user.email}</dd>
-              </div>
-            </div>
-            <div className="flex items-start gap-3.5 px-6 py-4">
-              <CalendarDays className="mt-0.5 h-4 w-4 text-muted" />
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-widest text-muted">
-                  Member since
-                </dt>
-                <dd className="mt-0.5 font-medium">
-                  {new Date(user.createdAt).toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </dd>
-              </div>
-            </div>
-          </dl>
+        <div className="space-y-3 sm:space-y-0">
+          <ProfileEditor user={{ name: user.name, email: user.email }} />
         </div>
       </div>
     </div>

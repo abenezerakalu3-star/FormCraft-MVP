@@ -2,6 +2,15 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "./prisma";
+import { hasPermission, Permission, PermissionJson } from "./permissions";
+
+export {
+  PERMISSIONS,
+  PERMISSION_LABELS,
+  resolvePermissions,
+  hasPermission,
+} from "./permissions";
+export type { Permission, PermissionJson };
 
 export const SESSION_COOKIE = "session";
 export const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
@@ -56,5 +65,11 @@ export async function requireUser() {
 export async function requireAdmin() {
   const user = await getSessionUser();
   if (!user || user.role !== "admin") redirect("/login");
+  return user;
+}
+
+export async function requirePermission(...perms: Permission[]) {
+  const user = await requireAdmin();
+  if (!hasPermission(user, ...perms)) redirect("/admin");
   return user;
 }

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Palette, Settings } from "lucide-react";
-import { requireAdmin } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
 import { getSiteSettings } from "@/lib/settings";
 import AdminSettingsForm from "@/components/admin/admin-settings-form";
 
 export default async function AdminSettingsPage() {
-  await requireAdmin();
+  await requirePermission("settings");
   const settings = await getSiteSettings();
 
   return (

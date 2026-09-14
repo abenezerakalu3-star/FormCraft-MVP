@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requirePermission } from "@/lib/auth";
 import { blogPostSchema } from "@/lib/validate";
 import { slugify } from "@/lib/slugify";
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
+  const admin = await requirePermission("blog");
   const body = await req.json().catch(() => null);
   const parsed = blogPostSchema.safeParse(body);
   if (!parsed.success) {

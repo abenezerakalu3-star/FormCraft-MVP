@@ -19,11 +19,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </span>
           <div className="leading-tight">
             <p className="text-sm font-bold tracking-tight">{settings.siteName} Admin</p>
-            <p className="text-xs text-muted">Super admin console</p>
+            <p className="text-xs text-muted">Management console</p>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-5">
-          <AdminNav />
+          <AdminNav permissions={user.permissions} />
         </div>
         <div className="border-t border-line p-4">
           <div className="mb-2 flex items-center gap-2.5 px-2">
@@ -33,7 +33,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <div className="min-w-0 leading-tight">
               <p className="truncate text-sm font-semibold">{user.name || user.email}</p>
               <span className="chip bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-                Super admin
+                Administrator
               </span>
             </div>
           </div>
@@ -62,7 +62,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
         {/* Mobile nav */}
         <div className="border-b border-line bg-surface/80 px-4 py-2 lg:hidden">
-          <AdminNav />
+          <AdminNav permissions={user.permissions} />
         </div>
 
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">{children}</main>
