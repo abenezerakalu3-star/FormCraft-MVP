@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect, forbidden } from "next/navigation";
 import { prisma } from "./prisma";
 import { hasPermission, Permission, PermissionJson } from "./permissions";
 
@@ -64,12 +64,13 @@ export async function requireUser() {
 
 export async function requireAdmin() {
   const user = await getSessionUser();
-  if (!user || user.role !== "admin") redirect("/login");
+  if (!user) redirect("/login");
+  if (user.role !== "admin") forbidden();
   return user;
 }
 
 export async function requirePermission(...perms: Permission[]) {
   const user = await requireAdmin();
-  if (!hasPermission(user, ...perms)) redirect("/admin");
+  if (!hasPermission(user, ...perms)) forbidden();
   return user;
 }
