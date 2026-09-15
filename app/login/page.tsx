@@ -54,7 +54,7 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthShell title="Welcome back" subtitle="Log in to your FormCraft account">
+    <AuthShell title="Welcome back" subtitle="Log in to your Formitect account">
       <GoogleButton />
       <div className="my-5 flex items-center gap-3 text-xs font-medium text-muted">
         <span className="h-px flex-1 bg-line" />

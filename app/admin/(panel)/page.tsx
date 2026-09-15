@@ -108,7 +108,7 @@ export default async function AdminHomePage() {
             Welcome back, {admin.name?.split(" ")[0] || "Admin"}
           </h1>
           <p className="mt-1 text-sm text-muted">
-            Here is what is happening across FormCraft today.
+            Here is what is happening across Formitect today.
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-2xl border border-line bg-surface px-4 py-2.5 shadow-sm">

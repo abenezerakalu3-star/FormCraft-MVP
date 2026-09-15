@@ -5,7 +5,7 @@ import ContactForm from "@/components/contact-form";
 
 export const metadata = {
   title: "Contact",
-  description: "Have a question, idea, or feedback? Get in touch with the FormCraft team.",
+  description: "Have a question, idea, or feedback? Get in touch with the Formitect team.",
   robots: { index: true, follow: true },
 };
 

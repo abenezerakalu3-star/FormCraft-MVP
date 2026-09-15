@@ -19,8 +19,8 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: "FormCraft — build beautiful forms in minutes",
-    template: "%s — FormCraft",
+    default: "Formitect — build beautiful forms in minutes",
+    template: "%s — Formitect",
   },
   description:
     "Create beautiful forms, share them anywhere, and collect submissions — no code needed. Free forever.",
@@ -30,24 +30,24 @@ export const metadata: Metadata = {
     "free form maker",
     "collect responses",
     "survey builder",
-    "FormCraft",
+    "Formitect",
   ],
-  authors: [{ name: "FormCraft" }],
-  creator: "FormCraft",
-  applicationName: "FormCraft",
+  authors: [{ name: "Formitect" }],
+  creator: "Formitect",
+  applicationName: "Formitect",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "/",
-    siteName: "FormCraft",
-    title: "FormCraft — build beautiful forms in minutes",
+    siteName: "Formitect",
+    title: "Formitect — build beautiful forms in minutes",
     description:
       "Create beautiful forms, share them anywhere, and collect submissions — no code needed.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "FormCraft — build beautiful forms in minutes",
+    title: "Formitect — build beautiful forms in minutes",
     description:
       "Create beautiful forms, share them anywhere, and collect submissions — no code needed.",
   },

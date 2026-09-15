@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 export const DEFAULT_SETTINGS = {
-  siteName: "FormCraft",
+  siteName: "Formitect",
   tagline: "Build beautiful forms, share them anywhere, and collect responses — no code needed.",
   heroTitle: "Build beautiful forms",
   heroSubtitle:
@@ -9,7 +9,7 @@ export const DEFAULT_SETTINGS = {
   heroCta: "Create my first form",
   announcement: "",
   footerNote: "Made for people who love good forms.",
-  contactEmail: "hello@formcraft.app",
+  contactEmail: "hello@formitect.app",
 } as const;
 
 export type SiteSettings = typeof DEFAULT_SETTINGS;

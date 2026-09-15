@@ -3,14 +3,14 @@ import PublicShell from "@/components/public-shell";
 
 export const metadata = {
   title: "Terms of Service",
-  description: "The terms and conditions that govern your use of FormCraft.",
+  description: "The terms and conditions that govern your use of Formitect.",
   robots: { index: true, follow: true },
 };
 
 const sections = [
   {
     title: "The service",
-    body: "FormCraft lets you create forms, share them, and collect responses. You are responsible for the content you put in your forms and how you use the responses you collect.",
+    body: "Formitect lets you create forms, share them, and collect responses. You are responsible for the content you put in your forms and how you use the responses you collect.",
   },
   {
     title: "Your account",
@@ -34,7 +34,7 @@ const sections = [
   },
   {
     title: "Limitation of liability",
-    body: "To the maximum extent permitted by law, FormCraft is not liable for indirect, incidental, or consequential damages arising from your use of the service.",
+    body: "To the maximum extent permitted by law, Formitect is not liable for indirect, incidental, or consequential damages arising from your use of the service.",
   },
   {
     title: "Termination",

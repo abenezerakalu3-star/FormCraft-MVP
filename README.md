@@ -1,6 +1,6 @@
-# FormCraft — Build forms in minutes, collect answers that matter
+# Formitect — Build forms in minutes, collect answers that matter
 
-FormCraft is a modern, self-hosted form builder SaaS built on **Next.js 16**. You
+Formitect is a modern, self-hosted form builder SaaS built on **Next.js 16**. You
 create a form with a drag-and-drop style visual builder, publish it to a public
 link, and watch responses stream into a clean analytics dashboard — no code,
 no fees, no limits. Supporting documents like CVs and Student IDs are stored in
@@ -9,7 +9,7 @@ the country.
 
 ---
 
-## Why FormCraft matters
+## Why Formitect matters
 
 - **Free forever for creators.** Anyone can collect unlimited forms and
   responses without a credit card. No paywall to start, no surprise upgrade.
@@ -137,7 +137,7 @@ Optional:
 | `GOOGLE_CLIENT_SECRET`    | Google OAuth client secret                    |
 | `S3_ENDPOINT`             | AletCloud S3 endpoint (default `https://s3.aletcloud.com`) |
 | `S3_REGION`               | S3 region (default `us-east-1`)               |
-| `S3_BUCKET_NAME`          | Your bucket name (e.g. `t612-formcraft`)      |
+| `S3_BUCKET_NAME`          | Your bucket name (e.g. `t612-formitect`)      |
 | `S3_ACCESS_KEY_ID`        | Bucket access key                             |
 | `S3_SECRET_ACCESS_KEY`    | Bucket secret key                             |
 

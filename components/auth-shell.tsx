@@ -17,12 +17,12 @@ export default function AuthShell({ title, subtitle, children }: { title: string
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-black text-foreground dark:bg-background">
             F
           </span>
-          FormCraft
+          Formitect
         </Link>
 
         <div className="relative">
           <blockquote className="max-w-sm text-2xl font-semibold leading-snug">
-            &ldquo;We replaced three tools with FormCraft. Our response rate went up
+            &ldquo;We replaced three tools with Formitect. Our response rate went up
             3× the first week.&rdquo;
           </blockquote>
           <div className="mt-6 flex items-center gap-3">
@@ -57,7 +57,7 @@ export default function AuthShell({ title, subtitle, children }: { title: string
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-white">
                 F
               </span>
-              FormCraft
+              Formitect
             </Link>
           </div>
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>

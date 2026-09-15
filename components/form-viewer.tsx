@@ -269,7 +269,7 @@ export default function FormViewer({ form }: { form: FormData }) {
             </button>
 
             <p className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
-              Powered by <span className="font-semibold text-gray-500 dark:text-gray-400">FormCraft</span>
+              Powered by <span className="font-semibold text-gray-500 dark:text-gray-400">Formitect</span>
             </p>
           </form>
         )}

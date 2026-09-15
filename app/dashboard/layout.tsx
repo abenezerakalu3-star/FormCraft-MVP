@@ -23,7 +23,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-surface dark:text-background">
                 F
               </span>
-              FormCraft
+              Formitect
             </Link>
             <DashboardHeader />
           </div>

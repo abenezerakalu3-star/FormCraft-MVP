@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "FormCraft — build beautiful forms in minutes",
-    short_name: "FormCraft",
+    name: "Formitect — build beautiful forms in minutes",
+    short_name: "Formitect",
     description:
       "Create beautiful forms, share them anywhere, and collect submissions — no code needed.",
     start_url: "/",

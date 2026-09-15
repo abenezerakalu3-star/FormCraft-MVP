@@ -18,7 +18,7 @@ export default async function AdminSettingsPage() {
           <Settings className="h-6 w-6 text-indigo-500" /> Settings
         </h1>
         <p className="mt-1 text-sm text-muted">
-          Control FormCraft website content and appearance. Changes go live immediately.
+          Control Formitect website content and appearance. Changes go live immediately.
         </p>
       </div>
 

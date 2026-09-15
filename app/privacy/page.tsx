@@ -3,7 +3,7 @@ import PublicShell from "@/components/public-shell";
 
 export const metadata = {
   title: "Privacy Policy",
-  description: "How FormCraft collects, uses, and protects your personal data.",
+  description: "How Formitect collects, uses, and protects your personal data.",
   robots: { index: true, follow: true },
 };
 
