@@ -56,7 +56,7 @@ export default function TiltCard({
   }
 
   return (
-    <div data-cursor="card" className={`relative ${className}`} style={{ perspective: 1000 }}>
+    <div className={`relative ${className}`} style={{ perspective: 1000 }}>
       <motion.div
         ref={ref}
         onMouseMove={onMouseMove}
