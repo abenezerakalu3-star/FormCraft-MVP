@@ -33,6 +33,7 @@ interface FormData {
   description: string;
   slug: string;
   published: boolean;
+  notifyOnSubmission: boolean;
   fields: FieldData[];
 }
 
@@ -103,6 +104,7 @@ export default function FormBuilder({ form }: { form: FormData }) {
   const [title, setTitle] = useState(form.title);
   const [description, setDescription] = useState(form.description);
   const [published, setPublished] = useState(form.published);
+  const [notifyOnSubmission, setNotifyOnSubmission] = useState(form.notifyOnSubmission);
   const [fields, setFields] = useState<FieldData[]>(form.fields);
   const [dirty, setDirty] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(form.fields[0]?.id ?? null);
@@ -179,13 +181,22 @@ export default function FormBuilder({ form }: { form: FormData }) {
   async function saveFields() {
     setSaving(true);
     try {
-      const res = await fetch(`/api/forms/${form.id}/fields`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fields }),
-      });
-      const data = await res.json();
-      if (!res.ok) return notify(data.error || "Failed to save", true);
+      const [fieldsRes, metaRes] = await Promise.all([
+        fetch(`/api/forms/${form.id}/fields`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fields }),
+        }),
+        fetch(`/api/forms/${form.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, description, notifyOnSubmission }),
+        }),
+      ]);
+      const fieldsData = await fieldsRes.json();
+      if (!fieldsRes.ok) return notify(fieldsData.error || "Failed to save", true);
+      const metaData = await metaRes.json();
+      if (!metaRes.ok) return notify(metaData.error || "Failed to save", true);
       setDirty(false);
       notify("Saved ✓");
     } finally {
@@ -338,6 +349,30 @@ export default function FormBuilder({ form }: { form: FormData }) {
               <p className="mt-3 text-xs text-gray-400">
                 {fields.length} field{fields.length === 1 ? "" : "s"} · {fields.filter((f) => f.required).length} required
               </p>
+
+              <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
+                <div>
+                  <p className="text-sm font-medium">Email me on new responses</p>
+                  <p className="mt-0.5 text-xs text-gray-400">
+                    Receive a notification when someone submits this form.
+                  </p>
+                </div>
+                <button
+                  onClick={() => updateMeta(() => setNotifyOnSubmission((v) => !v))}
+                  role="switch"
+                  aria-checked={notifyOnSubmission}
+                  aria-label="Email me on new responses"
+                  className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+                    notifyOnSubmission ? "bg-indigo-500" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${
+                      notifyOnSubmission ? "left-[18px]" : "left-0.5"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </div>
 

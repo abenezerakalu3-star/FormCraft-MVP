@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ShieldCheck, Users } from "lucide-react";
-import { requirePermission } from "@/lib/auth";
+import { requirePermission, PERMISSIONS } from "@/lib/auth";
 import { resolvePermissions, PermissionJson } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import AdminAdminsManager, { AdminRecord } from "@/components/admin/admin-admins-manager";
@@ -21,9 +21,12 @@ export default async function AdminAdminsPage() {
     createdAt: u.createdAt.toISOString(),
   }));
 
+  const myPermissions = resolvePermissions(admin.permissions as PermissionJson);
+  const authorityLabel = myPermissions.length === PERMISSIONS.length ? "Full access" : myPermissions.join(", ");
+
   const stats = [
     { label: "Total admins", value: all, icon: Users, tone: "text-indigo-600 dark:text-indigo-400" },
-    { label: "Your authority", value: "Full", icon: ShieldCheck, tone: "text-emerald-600 dark:text-emerald-400" },
+    { label: "Your authority", value: authorityLabel, icon: ShieldCheck, tone: "text-emerald-600 dark:text-emerald-400" },
   ];
 
   return (

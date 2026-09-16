@@ -24,6 +24,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       title: parsed.data.title,
       description: parsed.data.description,
       published: parsed.data.published,
+      notifyOnSubmission: parsed.data.notifyOnSubmission,
     },
   });
 

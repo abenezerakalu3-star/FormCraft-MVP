@@ -168,6 +168,18 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-canvas text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: settings.siteName,
+            description: settings.tagline,
+            url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+          }),
+        }}
+      />
       {/* Announcement bar */}
       {settings.announcement ? (
         <div className="bg-foreground px-6 py-2.5 text-center text-sm font-semibold text-surface dark:bg-surface dark:text-foreground">

@@ -1,19 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Loader2, Lock, Save, UserRound } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { AlertTriangle, CheckCircle2, Loader2, Lock, Save, Trash2, UserRound, X } from "lucide-react";
 
 export default function ProfileEditor({
   user,
 }: {
   user: { name: string | null; email: string };
 }) {
+  const router = useRouter();
   const [profile, setProfile] = useState({ name: user.name || "", email: user.email });
   const [password, setPassword] = useState({ current: "", next: "", confirm: "" });
   const [savingInfo, setSavingInfo] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
   const [infoMsg, setInfoMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [pwdMsg, setPwdMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  // Danger zone
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [typed, setTyped] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteMsg, setDeleteMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  async function deleteAccount() {
+    setDeleteMsg(null);
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/user/account", { method: "DELETE" });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        setDeleteMsg({ ok: false, text: data?.error || "Failed to delete account" });
+        return;
+      }
+      router.replace("/login");
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   async function saveInfo(e: React.FormEvent) {
     e.preventDefault();
@@ -205,6 +229,75 @@ export default function ProfileEditor({
           {savingPassword ? "Updating…" : "Change password"}
         </button>
       </form>
+
+      {/* Danger zone */}
+      <div className="card border-red-200 p-6 dark:border-red-500/30">
+        <div className="mb-5 flex items-center gap-2.5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/10 text-red-600 dark:text-red-400">
+            <AlertTriangle className="h-4 w-4" />
+          </span>
+          <div>
+            <h2 className="font-bold tracking-tight text-red-600 dark:text-red-400">Danger zone</h2>
+            <p className="text-xs text-muted">Irreversible actions on your account.</p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            setTyped("");
+            setDeleteMsg(null);
+            setConfirmOpen(true);
+          }}
+          className="inline-flex items-center gap-2 rounded-xl border border-red-300 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-red-500/40 dark:text-red-400 dark:hover:bg-red-500/10"
+        >
+          <Trash2 className="h-4 w-4" /> Delete my account
+        </button>
+
+        {confirmOpen && (
+          <div className="mt-5 rounded-2xl border border-red-200 bg-red-50/60 p-5 dark:border-red-500/30 dark:bg-red-500/5">
+            <p className="text-sm font-semibold">This permanently deletes your account</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">
+              <li>All your forms, submissions, and views are removed.</li>
+              <li>This cannot be undone.</li>
+            </ul>
+            <div className="mt-4">
+              <label className="mb-1.5 block text-sm font-medium" htmlFor="del-confirm">
+                Type <span className="font-bold">DELETE</span> to confirm
+              </label>
+              <input
+                id="del-confirm"
+                value={typed}
+                onChange={(e) => setTyped(e.target.value)}
+                className="input-field"
+                placeholder="DELETE"
+                autoComplete="off"
+              />
+            </div>
+            {deleteMsg && (
+              <p className="mt-3 animate-fade-in rounded-lg px-3.5 py-2.5 text-sm font-medium text-red-600 dark:text-red-400">
+                {deleteMsg.text}
+              </p>
+            )}
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                onClick={deleteAccount}
+                disabled={typed !== "DELETE" || deleting}
+                className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                {deleting ? "Deleting…" : "Delete account"}
+              </button>
+              <button
+                onClick={() => setConfirmOpen(false)}
+                disabled={deleting}
+                className="inline-flex items-center gap-2 rounded-xl border border-line px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-foreground disabled:opacity-50"
+              >
+                <X className="h-4 w-4" /> Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

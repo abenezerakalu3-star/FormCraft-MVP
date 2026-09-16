@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import DashboardWarningBanner from "@/components/dashboard-warning-banner";
+import EmailVerificationBanner from "@/components/email-verification-banner";
 import DashboardHeader from "@/components/dashboard-header";
 import DashboardUserMenu from "@/components/dashboard-user-menu";
 import ThemeToggle from "@/components/theme-toggle";
@@ -13,6 +14,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="min-h-screen bg-canvas">
       {warnings.length > 0 && <DashboardWarningBanner message={warnings[warnings.length - 1].message} />}
+      <EmailVerificationBanner
+        emailVerified={user.emailVerified}
+        email={user.email}
+      />
       <header className="sticky top-0 z-40 border-b border-line/70 bg-surface/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <div className="flex items-center gap-8">

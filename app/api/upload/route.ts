@@ -10,7 +10,7 @@ export const config = { api: { bodyParser: false } };
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 const ALLOWED = new Set([
-  "png", "jpg", "jpeg", "gif", "webp", "svg", "avif", "bmp", "ico",
+  "png", "jpg", "jpeg", "gif", "webp", "avif", "bmp", "ico",
   "pdf", "doc", "docx", "txt", "csv", "xls", "xlsx", "ppt", "pptx", "zip",
 ]);
 
@@ -19,7 +19,6 @@ const MIME_EXT: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/gif": "gif",
   "image/webp": "webp",
-  "image/svg+xml": "svg",
   "image/avif": "avif",
   "image/bmp": "bmp",
   "image/x-icon": "ico",

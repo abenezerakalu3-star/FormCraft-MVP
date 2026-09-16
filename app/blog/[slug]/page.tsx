@@ -5,6 +5,7 @@ import { getSiteSettings } from "@/lib/settings";
 import { prisma } from "@/lib/prisma";
 import ThemeToggle from "@/components/theme-toggle";
 import MobileMenu from "@/components/mobile-menu";
+import BlogContent from "@/components/blog-content";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -39,8 +40,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   if (!post) notFound();
 
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt || undefined,
+    image: undefined,
+    datePublished: post.createdAt.toISOString(),
+    author: post.author?.name
+      ? { "@type": "Person", name: post.author.name }
+      : { "@type": "Organization", name: settings.siteName },
+    publisher: { "@type": "Organization", name: settings.siteName },
+    mainEntityOfPage: `${siteUrl}/blog/${post.slug}`,
+  };
+
   return (
     <div className="min-h-screen bg-canvas text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <div className="border-b border-line/70 bg-surface/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
@@ -93,14 +113,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             {post.excerpt}
           </p>
         )}
-        <div className="mt-8 space-y-5 text-[1.05rem] leading-relaxed">
-          {post.content
-            .split(/\n{2,}/)
-            .map((p) => p.trim())
-            .filter(Boolean)
-            .map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
+        <div className="mt-8">
+          <BlogContent content={post.content} />
         </div>
       </article>
     </div>

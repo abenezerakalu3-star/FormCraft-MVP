@@ -8,31 +8,36 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  email     String     @unique
-  name      String?
-  password  String
-  role      String     @default("user")
-  blocked   Boolean    @default(false)
-  warnings  Json       @default("[]")
-  permissions Json    @default("[]")
-  createdAt DateTime   @default(now())
-  forms     Form[]
-  posts     BlogPost[]
+  id                 String     @id @default(cuid())
+  email              String     @unique
+  name               String?
+  password           String
+  role               String     @default("user")
+  blocked            Boolean    @default(false)
+  emailVerified      DateTime?
+  onboardingCompleted Boolean   @default(false)
+  warnings           Json       @default("[]")
+  permissions        Json       @default("[]")
+  createdAt          DateTime   @default(now())
+  forms              Form[]
+  posts              BlogPost[]
+  resetTokens        PasswordResetToken[]
+  verifyTokens       VerificationToken[]
 }
 
 model Form {
-  id          String       @id @default(cuid())
-  userId      String
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title       String
-  description String       @default("")
-  slug        String       @unique
-  published   Boolean      @default(false)
-  createdAt   DateTime     @default(now())
-  fields      Field[]
-  submissions Submission[]
-  views       FormView[]
+  id                String       @id @default(cuid())
+  userId            String
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  description       String       @default("")
+  slug              String       @unique
+  published         Boolean      @default(false)
+  notifyOnSubmission Boolean     @default(false)
+  createdAt         DateTime     @default(now())
+  fields            Field[]
+  submissions       Submission[]
+  views             FormView[]
 }
 
 model Field {
@@ -93,4 +98,28 @@ model ContactMessage {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }

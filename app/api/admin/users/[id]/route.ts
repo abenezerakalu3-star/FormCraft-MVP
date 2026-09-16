@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/auth";
+import { logSecurity } from "@/lib/logger";
 
 type Warning = { message: string; by: string; at: string };
 
@@ -21,6 +22,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const message: string =
     typeof body?.message === "string" ? body.message.slice(0, 500) : "";
   const by = admin.email || "super admin";
+
+  logSecurity("admin.user_action", { action, targetId: id, by });
 
   switch (action) {
     case "warn": {

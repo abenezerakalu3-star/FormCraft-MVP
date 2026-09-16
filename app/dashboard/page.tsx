@@ -3,6 +3,7 @@ import { ClipboardList, Eye, FileStack, Rocket, Send } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import DashboardForms from "@/components/dashboard-forms";
+import OnboardingModal from "@/components/onboarding-modal";
 import Magnetic from "@/components/motion/magnetic";
 import TiltCard from "@/components/motion/tilt-card";
 
@@ -21,6 +22,8 @@ export default async function DashboardPage() {
     include: { _count: { select: { submissions: true, fields: true, views: true } } },
     orderBy: { createdAt: "desc" },
   });
+
+  const onboardingPending = !user.onboardingCompleted;
 
   const submissions = forms.reduce((n, f) => n + f._count.submissions, 0);
   const views = forms.reduce((n, f) => n + f._count.views, 0);
@@ -121,6 +124,7 @@ export default async function DashboardPage() {
           )
         )}
       />
+      {onboardingPending && <OnboardingModal />}
     </div>
   );
 }

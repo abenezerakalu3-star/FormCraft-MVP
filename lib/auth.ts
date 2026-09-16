@@ -15,7 +15,22 @@ export type { Permission, PermissionJson };
 export const SESSION_COOKIE = "session";
 export const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 
-const secret = () => new TextEncoder().encode(process.env.SESSION_SECRET || "dev-secret-change-me");
+function getSecret(): Uint8Array {
+  const raw = process.env.SESSION_SECRET;
+  if (raw) return new TextEncoder().encode(raw);
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "SESSION_SECRET environment variable is required in production. " +
+      "Set a strong random string (at least 32 characters)."
+    );
+  }
+  console.warn(
+    "[Formitect] Using development-only SESSION_SECRET fallback. " +
+    "Set SESSION_SECRET for production deployments."
+  );
+  return new TextEncoder().encode("dev-only-fallback-do-not-use-in-production");
+}
+const secret = getSecret;
 
 export async function createSession(userId: string) {
   const token = await new SignJWT({})

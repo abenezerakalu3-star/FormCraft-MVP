@@ -18,6 +18,18 @@ export async function POST(req: Request) {
       userId: user.id,
       title: parsed.data.title,
       slug: newSlug(),
+      fields: parsed.data.fields?.length
+        ? {
+            create: parsed.data.fields.map((field, order) => ({
+              id: field.id,
+              type: field.type,
+              label: field.label,
+              required: field.required,
+              options: field.options,
+              order,
+            })),
+          }
+        : undefined,
     },
   });
 

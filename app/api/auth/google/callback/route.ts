@@ -56,7 +56,14 @@ export async function GET(req: Request) {
         email: userInfo.email,
         name: userInfo.name || userInfo.email.split("@")[0],
         password: await hashPassword(randomBytes(32).toString("hex")),
+        // Google verified the email address, so mark the account verified.
+        emailVerified: new Date(),
       },
+    });
+  } else if (!user.emailVerified) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { emailVerified: new Date() },
     });
   }
 

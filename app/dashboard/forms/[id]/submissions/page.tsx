@@ -76,6 +76,9 @@ export default async function SubmissionsPage({
   ).length;
   /* eslint-enable react-hooks/purity */
 
+  const totalViews = await prisma.formView.count({ where: { formId: id } });
+  const completionRate = totalViews > 0 ? Math.round((total / totalViews) * 100) : 0;
+
   return (
     <div className="animate-fade-in">
       {/* Header */}
@@ -116,13 +119,15 @@ export default async function SubmissionsPage({
           { label: "This week", value: lastWeek, tone: "text-indigo-600" },
           {
             label: "Completion rate",
-            value: total ? "100%" : "—",
+            value: totalViews > 0 ? `${completionRate}%` : "—",
             tone: "text-emerald-600",
+            sub: totalViews > 0 ? `${total} of ${totalViews} viewers` : undefined,
           },
         ].map((s) => (
           <div key={s.label} className="card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
             <p className="text-sm text-muted">{s.label}</p>
             <p className={`mt-1 text-3xl font-bold ${s.tone}`}>{s.value}</p>
+            {"sub" in s && s.sub && <p className="mt-1 text-xs text-muted">{s.sub}</p>}
           </div>
         ))}
       </div>

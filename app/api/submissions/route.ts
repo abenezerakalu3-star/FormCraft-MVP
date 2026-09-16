@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { submissionSchema } from "@/lib/validate";
 import { splitOptions } from "@/lib/fields";
 import { parseFileValue } from "@/lib/files";
+import { sendSubmissionNotification } from "@/lib/email";
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
@@ -15,7 +16,10 @@ export async function POST(req: Request) {
 
   const form = await prisma.form.findUnique({
     where: { slug },
-    include: { fields: { orderBy: { order: "asc" } }, user: { select: { blocked: true } } },
+    include: {
+      fields: { orderBy: { order: "asc" } },
+      user: { select: { blocked: true, email: true, name: true } },
+    },
   });
 
   if (!form || !form.published || form.user.blocked) {
@@ -65,6 +69,14 @@ export async function POST(req: Request) {
       ),
     },
   });
+
+  // Notify the owner (fire-and-forget, never block the response).
+  if (form.notifyOnSubmission) {
+    const count = await prisma.submission.count({ where: { formId: form.id } });
+    sendSubmissionNotification(form.user.email, form.user.name, form.title, count).catch(
+      (err) => console.error("[submissions] Notification failed:", err)
+    );
+  }
 
   return NextResponse.json({ ok: true, id: submission.id }, { status: 201 });
 }

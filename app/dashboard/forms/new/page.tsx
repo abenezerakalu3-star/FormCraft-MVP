@@ -1,33 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BarChart3, Brain, Briefcase, ClipboardList, Mail, MessageSquare } from "lucide-react";
+import { BarChart3, Brain, Briefcase, ClipboardList, Loader2, Mail, MessageSquare } from "lucide-react";
+import { FORM_TEMPLATES, FormTemplate } from "@/lib/templates";
 
-const templates = [
-  { label: "Customer feedback", icon: MessageSquare },
-  { label: "Job application", icon: Briefcase },
-  { label: "Registration", icon: ClipboardList },
-  { label: "Quiz", icon: Brain },
-  { label: "Survey", icon: BarChart3 },
-  { label: "Contact form", icon: Mail },
-];
+const TEMPLATE_ICONS: Record<string, typeof MessageSquare> = {
+  "customer-feedback": MessageSquare,
+  "job-application": Briefcase,
+  registration: ClipboardList,
+  quiz: Brain,
+  survey: BarChart3,
+  "contact-form": Mail,
+};
 
 export default function NewFormPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [creating, setCreating] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("title");
+    if (t) {
+      const id = window.setTimeout(() => setTitle(t), 0);
+      return () => window.clearTimeout(id);
+    }
+  }, []);
+
+  async function create(form: { title: string; fields?: FormTemplate["fields"] }) {
     try {
       const res = await fetch("/api/forms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify(form),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -35,8 +42,29 @@ export default function NewFormPage() {
         return;
       }
       router.push(`/dashboard/forms/${data.form.id}`);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await create({ title });
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function applyTemplate(t: FormTemplate) {
+    setError("");
+    setCreating(t.key);
+    try {
+      await create({ title: t.title, fields: t.fields });
+    } finally {
+      setCreating(null);
     }
   }
 
@@ -66,29 +94,41 @@ export default function NewFormPage() {
             disabled={loading}
             className="btn-primary mt-5 w-full disabled:opacity-50"
           >
-            {loading ? "Creating…" : "Create form and start building"}
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Start building"}
+            {loading ? " Creating…" : " Create form and start building"}
           </button>
         </div>
       </form>
 
       <div className="mt-8">
         <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-400">
-          Start with a template name
+          or start from a template
         </p>
-        <div className="flex flex-wrap gap-2">
-          {templates.map((t) => (
-            <button
-              key={t.label}
-              type="button"
-              onClick={() => setTitle(t.label)}
-              className="inline-flex items-center gap-2 rounded-xl border border-line bg-surface px-3.5 py-2 text-sm font-medium shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md active:scale-[0.98]"
-            >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-                <t.icon className="h-4 w-4" />
-              </span>
-              {t.label}
-            </button>
-          ))}
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          {FORM_TEMPLATES.map((t) => {
+            const Icon = TEMPLATE_ICONS[t.key] || MessageSquare;
+            return (
+              <button
+                key={t.key}
+                type="button"
+                disabled={creating !== null}
+                onClick={() => applyTemplate(t)}
+                className="group flex items-start gap-2.5 rounded-xl border border-line bg-surface px-3.5 py-3 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md active:scale-[0.98] disabled:opacity-50"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                  {creating === t.key ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Icon className="h-4 w-4" />
+                  )}
+                </span>
+                <span>
+                  <span className="block text-sm font-semibold">{t.label}</span>
+                  <span className="mt-0.5 block text-xs text-muted">{t.description}</span>
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -25,12 +25,14 @@ export const formFieldsSchema = z.object({
 
 export const createFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(200),
+  fields: z.array(formFieldSchema).max(50).optional(),
 });
 
 export const updateFormSchema = z.object({
   title: z.string().min(1).max(200).optional(),
   description: z.string().max(2000).optional(),
   published: z.boolean().optional(),
+  notifyOnSubmission: z.boolean().optional(),
 });
 
 export const submissionSchema = z.object({
@@ -68,4 +70,13 @@ export const updateProfileSchema = z.object({
 export const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required"),
   newPassword: z.string().min(8, "New password must be at least 8 characters").max(128),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Invalid email").max(200),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Token is required"),
+  password: z.string().min(8, "Password must be at least 8 characters").max(128),
 });

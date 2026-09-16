@@ -6,7 +6,7 @@ export interface UploadedFile {
   mime: string;
 }
 
-export const IMAGE_MIMES = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/svg+xml", "image/avif", "image/bmp", "image/x-icon"];
+export const IMAGE_MIMES = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif", "image/bmp", "image/x-icon"];
 
 export function formatBytes(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
