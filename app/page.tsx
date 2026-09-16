@@ -302,13 +302,13 @@ export default async function Home() {
           </div>
 
           {/* Hero mock */}
-          <ParallaxLayer depth={34} className="relative lg:justify-self-end">
-            <FadeIn delay={0.2} y={32}>
+          <FadeIn delay={0.2} y={32} className="relative lg:justify-self-end">
             <div
               className="absolute -inset-8 rounded-3xl opacity-70 blur-2xl"
               style={{ background: "radial-gradient(closest-side, rgba(79,70,229,0.16), transparent 70%)" }}
             />
-            <div className="animate-float relative w-full max-w-md rounded-3xl border border-line bg-surface p-7 shadow-2xl shadow-indigo-900/10">
+            <TiltCard intensity={10} spotlight="rgba(79,70,229,0.10)" className="w-full max-w-md">
+            <div className="relative rounded-3xl border border-line bg-surface p-7 shadow-2xl shadow-indigo-900/10">
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="flex items-center gap-2 text-lg font-bold">
@@ -360,7 +360,7 @@ export default async function Home() {
                 </div>
 
                 {/* Floating notes */}
-                <div className="absolute -left-12 top-16 hidden animate-float sm:block" style={{ animationDelay: "1.4s" }}>
+                <div className="absolute -left-12 top-16 hidden sm:block">
                   <div className="flex items-center gap-2 rounded-xl border border-line bg-surface px-3.5 py-2.5 shadow-xl shadow-indigo-900/10">
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
                       <CheckCircle2 className="h-3.5 w-3.5" />
@@ -371,7 +371,7 @@ export default async function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="absolute -right-5 bottom-20 hidden animate-float sm:block" style={{ animationDelay: "0.9s" }}>
+                <div className="absolute -right-5 bottom-20 hidden sm:block">
                   <div className="flex items-center gap-2 rounded-xl border border-line bg-surface px-3.5 py-2.5 shadow-xl shadow-indigo-900/10">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
                       <Zap className="h-3.5 w-3.5" />
@@ -381,8 +381,8 @@ export default async function Home() {
                 </div>
               </div>
             </div>
+            </TiltCard>
           </FadeIn>
-        </ParallaxLayer>
         </PointerParallax>
 
         {/* Scroll cue */}
