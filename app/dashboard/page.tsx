@@ -3,6 +3,8 @@ import { ClipboardList, Eye, FileStack, Rocket, Send } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import DashboardForms from "@/components/dashboard-forms";
+import Magnetic from "@/components/motion/magnetic";
+import TiltCard from "@/components/motion/tilt-card";
 
 function greeting() {
   const h = new Date().getHours();
@@ -54,35 +56,39 @@ export default async function DashboardPage() {
                   : `You've collected ${submissions} response${submissions === 1 ? "" : "s"} across ${live} live form${live === 1 ? "" : "s"}. Keep it up!`}
             </p>
           </div>
-          <Link href="/dashboard/forms/new" className="btn-primary">
-            <span className="text-base leading-none">＋</span> New form
-          </Link>
+          <Magnetic>
+            <Link href="/dashboard/forms/new" className="btn-primary">
+              <span className="text-base leading-none">＋</span> New form
+            </Link>
+          </Magnetic>
         </div>
       </div>
 
       {/* Stats */}
       <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((s, i) => (
-          <div
-            key={s.label}
-            className="group card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5"
-            style={{ animationDelay: `${i * 60}ms` }}
-          >
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted">{s.label}</p>
-              <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${s.bg} transition-transform duration-300 group-hover:scale-110`}>
-                <s.icon className={`h-4 w-4 ${s.tone}`} />
-              </span>
-            </div>
-            <p className={`mt-2 text-3xl font-bold ${s.tone}`}>{s.value}</p>
-            {s.label === "Responses" && views > 0 && (
-              <p className="mt-1 text-xs text-muted">
-                {Math.round((submissions / views) * 100)}% of viewers respond
-              </p>
-            )}
-            {s.label === "Live forms" && drafts > 0 && (
-              <p className="mt-1 text-xs text-muted">{drafts} draft{drafts === 1 ? "" : "s"} waiting</p>
-            )}
+          <div key={s.label} className="animate-fade-up" style={{ animationDelay: `${i * 60}ms` }}>
+            <TiltCard
+              intensity={3}
+              spotlight="rgba(99,102,241,0.06)"
+              className="group card h-full p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5"
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted">{s.label}</p>
+                <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${s.bg} transition-transform duration-300 group-hover:scale-110`}>
+                  <s.icon className={`h-4 w-4 ${s.tone}`} />
+                </span>
+              </div>
+              <p className={`mt-2 text-3xl font-bold ${s.tone}`}>{s.value}</p>
+              {s.label === "Responses" && views > 0 && (
+                <p className="mt-1 text-xs text-muted">
+                  {Math.round((submissions / views) * 100)}% of viewers respond
+                </p>
+              )}
+              {s.label === "Live forms" && drafts > 0 && (
+                <p className="mt-1 text-xs text-muted">{drafts} draft{drafts === 1 ? "" : "s"} waiting</p>
+              )}
+            </TiltCard>
           </div>
         ))}
       </div>

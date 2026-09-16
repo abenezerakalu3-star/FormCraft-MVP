@@ -3,8 +3,11 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { BarChart3, Plus, Search, Trash2, ClipboardList } from "lucide-react";
 import CopyButton from "@/components/copy-button";
+import Magnetic from "@/components/motion/magnetic";
+import TiltCard from "@/components/motion/tilt-card";
 
 export interface DashboardForm {
   id: string;
@@ -71,19 +74,29 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
             ["all", "All"],
             ["live", "Live"],
             ["draft", "Drafts"],
-          ] as const).map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => setFilter(key)}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
-                filter === key
-                  ? "bg-foreground text-surface shadow-sm dark:text-background"
-                  : "text-muted hover:text-foreground"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+          ] as const).map(([key, label]) => {
+            const active = filter === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setFilter(key)}
+                className={`relative rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                  active
+                    ? "text-surface dark:text-background"
+                    : "text-muted hover:text-foreground"
+                }`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="form-filter-pill"
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                    className="absolute inset-0 rounded-lg bg-foreground shadow-sm dark:bg-foreground"
+                  />
+                )}
+                <span className="relative z-10">{label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -99,9 +112,11 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
               <p className="mt-1 mb-6 max-w-sm text-sm text-muted">
                 Create your first form and start collecting responses in minutes.
               </p>
-              <Link href="/dashboard/forms/new" className="btn-primary">
-                <Plus className="h-4 w-4" /> Create your first form
-              </Link>
+              <Magnetic>
+                  <Link href="/dashboard/forms/new" className="btn-primary">
+                    <Plus className="h-4 w-4" /> Create your first form
+                  </Link>
+                </Magnetic>
             </>
           ) : (
             <>
@@ -120,10 +135,15 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
             return (
               <div
                 key={form.id}
-                className="group card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/5 animate-fade-up"
+                className="h-full animate-fade-up"
                 style={{ animationDelay: `${i * 60}ms` }}
               >
-                <div className={`h-1.5 ${accent}`} />
+                <TiltCard
+                  intensity={4}
+                  spotlight="rgba(99,102,241,0.07)"
+                  className="group card h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-900/5"
+                >
+                  <div className={`h-1.5 ${accent}`} />
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <Link
@@ -219,6 +239,7 @@ export default function DashboardForms({ forms }: { forms: DashboardForm[] }) {
                     </button>
                   </div>
                 </div>
+                </TiltCard>
               </div>
             );
           })}

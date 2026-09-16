@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Check, Copy } from "lucide-react";
 
 export default function CopyButton({ slug }: { slug: string }) {
@@ -18,7 +19,31 @@ export default function CopyButton({ slug }: { slug: string }) {
         setTimeout(() => setCopied(false), 1500);
       }}
     >
-      {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+      <AnimatePresence mode="wait" initial={false}>
+        {copied ? (
+          <motion.span
+            key="check"
+            initial={{ scale: 0.4, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.4, opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="inline-flex"
+          >
+            <Check className="h-3.5 w-3.5 text-emerald-500" />
+          </motion.span>
+        ) : (
+          <motion.span
+            key="copy"
+            initial={{ scale: 0.4, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.4, opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="inline-flex"
+          >
+            <Copy className="h-3.5 w-3.5" />
+          </motion.span>
+        )}
+      </AnimatePresence>
       {copied ? "Copied!" : "Copy"}
     </button>
   );

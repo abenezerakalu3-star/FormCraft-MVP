@@ -243,3 +243,64 @@ a:focus-visible {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Header chrome */
+header {
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+header.scrolled {
+  box-shadow: 0 12px 32px -20px rgba(15, 23, 42, 0.35);
+}
+body {
+  --nav-shadow: 0 12px 32px -20px rgba(15, 23, 42, 0.35);
+}
+header.scrolled {
+  box-shadow: var(--nav-shadow);
+}
+@keyframes nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+header.nav-entered {
+  animation: nav-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Animated underline for text nav links */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

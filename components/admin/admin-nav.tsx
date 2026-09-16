@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   ClipboardList,
   Home,
@@ -41,13 +42,22 @@ function NavItem({ item, onNavigate }: { item: NavItem; onNavigate?: () => void 
       href={item.href}
       onClick={onNavigate}
       aria-current={active ? "page" : undefined}
-      className={`flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-all ${
+      className={`relative flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
         active
-          ? "bg-foreground text-surface shadow-sm dark:bg-foreground dark:text-background"
+          ? "text-surface dark:text-background"
           : "text-muted hover:bg-gray-100 hover:text-foreground dark:hover:bg-gray-100/10"
       }`}
     >
-      <item.icon className="h-4 w-4" /> {item.label}
+      {active && (
+        <motion.span
+          layoutId="admin-nav-pill"
+          transition={{ type: "spring", stiffness: 380, damping: 32 }}
+          className="absolute inset-0 rounded-xl bg-foreground shadow-sm dark:bg-foreground"
+        />
+      )}
+      <span className="relative z-10 flex items-center gap-2.5">
+        <item.icon className="h-4 w-4" /> {item.label}
+      </span>
     </Link>
   );
 }

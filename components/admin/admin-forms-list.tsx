@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { ClipboardList, FileText, Globe, Search } from "lucide-react";
 
 export interface AdminForm {
@@ -51,19 +52,27 @@ export default function AdminFormsList({ forms }: { forms: AdminForm[] }) {
           />
         </div>
         <div className="flex items-center gap-1 rounded-xl border border-line bg-canvas p-1">
-          {statusTabs.map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => setStatus(key)}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
-                status === key
-                  ? "bg-foreground text-surface dark:text-background"
-                  : "text-muted hover:text-foreground"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+          {statusTabs.map(([key, label]) => {
+            const active = status === key;
+            return (
+              <button
+                key={key}
+                onClick={() => setStatus(key)}
+                className={`relative rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                  active ? "text-surface dark:text-background" : "text-muted hover:text-foreground"
+                }`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="forms-filter-pill"
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                    className="absolute inset-0 rounded-lg bg-foreground shadow-sm dark:bg-foreground"
+                  />
+                )}
+                <span className="relative z-10">{label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 

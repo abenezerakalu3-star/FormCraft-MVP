@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, LogOut, UserRound } from "lucide-react";
 
 export default function DashboardUserMenu({
@@ -56,32 +57,40 @@ export default function DashboardUserMenu({
         />
       </button>
 
-      {open && (
-        <div
-          role="menu"
-          className="absolute right-0 top-11 z-50 w-52 overflow-hidden rounded-xl border border-line bg-surface shadow-xl shadow-indigo-900/10 animate-fade-up"
-        >
-          <div className="border-b border-line px-4 py-3">
-            <p className="truncate text-sm font-semibold">{display}</p>
-            <p className="truncate text-xs text-muted">{email}</p>
-          </div>
-          <Link
-            href="/dashboard/profile"
-            role="menuitem"
-            onClick={() => setOpen(false)}
-            className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-50 hover:text-indigo-600 dark:hover:bg-gray-100/10"
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="user-menu"
+            role="menu"
+            initial={{ opacity: 0, scale: 0.96, y: -6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -6 }}
+            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformOrigin: "top right" }}
+            className="absolute right-0 top-11 z-50 w-52 overflow-hidden rounded-xl border border-line bg-surface shadow-xl shadow-indigo-900/10"
           >
-            <UserRound className="h-4 w-4 text-muted" /> Profile
-          </Link>
-          <button
-            role="menuitem"
-            onClick={logout}
-            className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
-          >
-            <LogOut className="h-4 w-4" /> Log out
-          </button>
-        </div>
-      )}
+            <div className="border-b border-line px-4 py-3">
+              <p className="truncate text-sm font-semibold">{display}</p>
+              <p className="truncate text-xs text-muted">{email}</p>
+            </div>
+            <Link
+              href="/dashboard/profile"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-50 hover:text-indigo-600 dark:hover:bg-gray-100/10"
+            >
+              <UserRound className="h-4 w-4 text-muted" /> Profile
+            </Link>
+            <button
+              role="menuitem"
+              onClick={logout}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
+            >
+              <LogOut className="h-4 w-4" /> Log out
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

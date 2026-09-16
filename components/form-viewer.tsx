@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { CheckCircle2, Send, Sparkles } from "lucide-react";
 import { splitOptions } from "@/lib/fields";
 import Celebration from "@/components/celebration";
@@ -135,10 +136,12 @@ export default function FormViewer({ form }: { form: FormData }) {
             {form.fields.map((field, i) => {
               const value = values[field.id] ?? "";
               return (
-                <div
+                <motion.div
                   key={field.id}
-                  className="card mb-4 p-6 transition-all duration-200 animate-fade-up"
-                  style={{ animationDelay: `${Math.min(i, 8) * 50}ms` }}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.06 * Math.min(i, 8), ease: "easeOut" }}
+                  className="card mb-4 p-6"
                 >
                   <label className="mb-2.5 block font-medium">
                     {field.label}
@@ -240,7 +243,7 @@ export default function FormViewer({ form }: { form: FormData }) {
                       className="input-field"
                     />
                   )}
-                </div>
+                </motion.div>
               );
             })}
 

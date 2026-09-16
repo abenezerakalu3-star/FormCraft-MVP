@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import TiltCard from "@/components/motion/tilt-card";
 import { AdminOverviewCharts } from "@/components/admin/admin-overview-charts";
 
 const DAYS = 14;
@@ -144,21 +145,23 @@ export default async function AdminHomePage() {
       {/* Stat cards */}
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6 animate-fade-up">
         {stats.map((s, i) => (
-          <div
-            key={s.label}
-            className="group card p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5"
-            style={{ animationDelay: `${i * 50}ms` }}
-          >
-            <span
-              className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl ${s.bg} transition-transform duration-300 group-hover:scale-110`}
+          <div key={s.label} className="animate-fade-up" style={{ animationDelay: `${i * 50}ms` }}>
+            <TiltCard
+              intensity={3}
+              spotlight="rgba(99,102,241,0.06)"
+              className="group card h-full p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-900/5"
             >
-              <s.icon className={`h-4 w-4 ${s.tone}`} />
-            </span>
-            <p className={`text-2xl font-bold ${s.tone}`}>{s.value.toLocaleString()}</p>
-            <p className="text-xs text-muted">
-              {s.label}
-              {s.sub ? <span className="text-gray-400"> · {s.sub}</span> : null}
-            </p>
+              <span
+                className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl ${s.bg} transition-transform duration-300 group-hover:scale-110`}
+              >
+                <s.icon className={`h-4 w-4 ${s.tone}`} />
+              </span>
+              <p className={`text-2xl font-bold ${s.tone}`}>{s.value.toLocaleString()}</p>
+              <p className="text-xs text-muted">
+                {s.label}
+                {s.sub ? <span className="text-gray-400"> · {s.sub}</span> : null}
+              </p>
+            </TiltCard>
           </div>
         ))}
       </div>

@@ -22,10 +22,10 @@ export default function PublicShell({
             {settings.siteName}
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium text-muted md:flex">
-            <Link href="/" className="transition-colors hover:text-foreground">
+            <Link href="/" className="nav-link transition-colors hover:text-foreground">
               Home
             </Link>
-            <Link href="/blog" className="transition-colors hover:text-foreground">
+            <Link href="/blog" className="nav-link transition-colors hover:text-foreground">
               Blog
             </Link>
             <div className="flex items-center gap-3">
