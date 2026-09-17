@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://api.producthunt.com https://*.producthunt.com https://lh3.googleusercontent.com https://www.gstatic.com",
+      "img-src 'self' data: blob: https: http:",
       "font-src 'self' data:",
       "connect-src 'self' https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com",
       "frame-src 'self' https://accounts.google.com",
