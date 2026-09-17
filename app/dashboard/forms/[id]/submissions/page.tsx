@@ -1,55 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Download, ExternalLink, FileText, Inbox } from "lucide-react";
+import { ArrowLeft, ExternalLink, Inbox } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
-import { formatBytes, IMAGE_MIMES, parseFileValue } from "@/lib/files";
 import CopyButton from "@/components/copy-button";
 import ExportCsv from "@/components/export-csv";
-
-function FileCell({ value }: { value: string }) {
-  const file = parseFileValue(value);
-  if (!file) return <span className="line-clamp-2">{value}</span>;
-
-  const isImage = IMAGE_MIMES.includes(file.mime);
-  const downloadHref = file.key
-    ? `/api/files?key=${encodeURIComponent(file.key)}&name=${encodeURIComponent(file.name)}&download=1`
-    : file.url;
-  return (
-    <div className="flex items-center gap-2.5">
-      <a
-        href={file.url}
-        target="_blank"
-        rel="noreferrer"
-        className="group flex min-w-0 flex-1 items-center gap-2.5"
-        title={`${file.name} (${formatBytes(file.size)})`}
-      >
-        {isImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={file.url}
-            alt={file.name}
-            className="h-9 w-9 shrink-0 rounded-lg object-cover"
-          />
-        ) : (
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-            <FileText className="h-4 w-4" />
-          </span>
-        )}
-        <span className="line-clamp-2 max-w-[11rem] text-indigo-600 group-hover:underline dark:text-indigo-400">
-          {file.name}
-        </span>
-      </a>
-      <a
-        href={downloadHref}
-        title={`Download ${file.name}`}
-        className="shrink-0 rounded-lg border border-line px-2.5 py-2 text-muted transition-colors hover:border-indigo-300 hover:text-indigo-600 dark:hover:border-indigo-500/50"
-      >
-        <Download className="h-3.5 w-3.5" />
-      </a>
-    </div>
-  );
-}
+import SubmissionsTable from "@/components/submissions-table";
 
 export default async function SubmissionsPage({
   params,
@@ -167,68 +123,21 @@ export default async function SubmissionsPage({
           </p>
         </div>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-line text-sm">
-              <thead className="bg-gray-50/80 dark:bg-gray-100/5">
-                <tr>
-                  <th className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-widest text-gray-500">
-                    Submitted
-                  </th>
-                  {form.fields.map((field) => (
-                    <th
-                      key={field.id}
-                      className="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-widest text-gray-500"
-                    >
-                      {field.label}
-                      {field.required && <span className="text-red-400"> *</span>}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-line">
-                {form.submissions.map((submission) => (
-                  <tr key={submission.id} className="transition-colors hover:bg-indigo-500/5">
-                    <td className="whitespace-nowrap px-5 py-4 text-gray-500 dark:text-gray-400">
-                      {new Date(submission.createdAt).toLocaleString(undefined, {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                    {form.fields.map((field) => {
-                      const value = (submission.data as Record<string, string>)[field.id];
-                      return (
-                        <td key={field.id} className="px-5 py-4">
-                          {field.type === "checkbox" && value ? (
-                            <div className="flex flex-wrap gap-1">
-                              {value.split(",").map((v) => (
-                                <span
-                                  key={v}
-                                  className="chip bg-gray-100 text-gray-700 dark:bg-gray-100/10 dark:text-gray-300"
-                                >
-                                  {v}
-                                </span>
-                              ))}
-                            </div>
-                          ) : field.type === "file" && value ? (
-                            <FileCell value={value} />
-                          ) : value ? (
-                            <span className="line-clamp-2">{value}</span>
-                          ) : (
-                            <span className="text-gray-300 dark:text-gray-600">—</span>
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <SubmissionsTable
+          formId={form.id}
+          formTitle={form.title}
+          fields={form.fields.map((f) => ({
+            id: f.id,
+            label: f.label,
+            type: f.type,
+            required: f.required,
+          }))}
+          rows={form.submissions.map((s) => ({
+            id: s.id,
+            createdAt: s.createdAt.toISOString(),
+            data: s.data as Record<string, string>,
+          }))}
+        />
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LogoMark from "@/components/logo-mark";
 
 export default function AuthShell({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
@@ -14,9 +15,7 @@ export default function AuthShell({ title, subtitle, children }: { title: string
           style={{ background: "radial-gradient(closest-side, #0ea5e9, transparent 70%)" }}
         />
         <Link href="/" className="relative flex items-center gap-2 text-xl font-bold">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sm font-black text-foreground dark:bg-background">
-            F
-          </span>
+          <LogoMark />
           Formitect
         </Link>
 
@@ -54,9 +53,7 @@ export default function AuthShell({ title, subtitle, children }: { title: string
         <div className="w-full max-w-sm animate-fade-up">
           <div className="mb-8 lg:hidden">
             <Link href="/" className="flex items-center gap-2 text-xl font-bold">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-white">
-                F
-              </span>
+              <LogoMark />
               Formitect
             </Link>
           </div>

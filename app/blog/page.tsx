@@ -6,6 +6,7 @@ import FadeIn from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import ThemeToggle from "@/components/theme-toggle";
 import MobileMenu from "@/components/mobile-menu";
+import LogoMark from "@/components/logo-mark";
 
 export async function generateMetadata() {
   const settings = await getSiteSettings();
@@ -36,14 +37,15 @@ export default async function BlogPage() {
       <div className="border-b border-line/70 bg-surface/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-surface dark:text-background">
-              F
-            </span>
+            <LogoMark />
             {settings.siteName}
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium text-muted md:flex">
             <Link href="/" className="transition-colors hover:text-foreground">
               Home
+            </Link>
+            <Link href="/pricing" className="transition-colors hover:text-foreground">
+              Pricing
             </Link>
             <div className="flex items-center gap-3">
               <ThemeToggle />
@@ -57,6 +59,7 @@ export default async function BlogPage() {
             <MobileMenu
               items={[
                 { href: "/", label: "Home" },
+                { href: "/pricing", label: "Pricing" },
                 { href: "/register", label: "Start free" },
               ]}
             />

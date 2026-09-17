@@ -5,6 +5,7 @@ import EmailVerificationBanner from "@/components/email-verification-banner";
 import DashboardHeader from "@/components/dashboard-header";
 import DashboardUserMenu from "@/components/dashboard-user-menu";
 import ThemeToggle from "@/components/theme-toggle";
+import LogoMark from "@/components/logo-mark";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
@@ -25,9 +26,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               href="/dashboard"
               className="flex items-center gap-2 text-xl font-bold tracking-tight"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-surface dark:text-background">
-                F
-              </span>
+              <LogoMark />
               Formitect
             </Link>
             <DashboardHeader />

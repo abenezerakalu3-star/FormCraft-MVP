@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Heart, Mail } from "lucide-react";
 import { SiteSettings } from "@/lib/settings";
+import LogoMark from "@/components/logo-mark";
 
 export default function SiteFooter({ settings }: { settings: SiteSettings }) {
   const links = [
@@ -9,6 +10,7 @@ export default function SiteFooter({ settings }: { settings: SiteSettings }) {
       items: [
         { label: "Features", href: "/#features" },
         { label: "How it works", href: "/#how" },
+        { label: "Pricing", href: "/pricing" },
         { label: "Blog", href: "/blog" },
       ],
     },
@@ -28,9 +30,7 @@ export default function SiteFooter({ settings }: { settings: SiteSettings }) {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-surface dark:text-background">
-                F
-              </span>
+              <LogoMark />
               {settings.siteName}
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">{settings.tagline}</p>

@@ -22,6 +22,7 @@ import { getSessionUser } from "@/lib/auth";
 import { getSiteSettings } from "@/lib/settings";
 import { prisma } from "@/lib/prisma";
 import ThemeToggle from "@/components/theme-toggle";
+import LogoMark from "@/components/logo-mark";
 import FadeIn from "@/components/motion/fade-in";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import StatCount from "@/components/motion/stat-count";
@@ -190,9 +191,7 @@ export default async function Home() {
       <nav className="sticky top-0 z-40 border-b border-line/70 bg-surface/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-sm font-black text-surface dark:text-background">
-              F
-            </span>
+            <LogoMark />
             {settings.siteName}
           </Link>
           <div className="hidden items-center gap-7 text-sm font-medium text-muted md:flex">
@@ -204,6 +203,9 @@ export default async function Home() {
             </a>
             <Link href="/blog" className="nav-link transition-colors hover:text-foreground">
               Blog
+            </Link>
+            <Link href="/pricing" className="nav-link transition-colors hover:text-foreground">
+              Pricing
             </Link>
           </div>
           <div className="flex items-center gap-3">
@@ -227,6 +229,7 @@ export default async function Home() {
                 { href: "#features", label: "Features" },
                 { href: "#how", label: "How it works" },
                 { href: "/blog", label: "Blog" },
+                { href: "/pricing", label: "Pricing" },
                 ...(user
                   ? [{ href: homeHref, label: user.role === "admin" ? "Go to admin" : "Go to dashboard" }]
                   : [

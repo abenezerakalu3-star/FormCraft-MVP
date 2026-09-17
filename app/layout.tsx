@@ -35,6 +35,13 @@ export const metadata: Metadata = {
   authors: [{ name: "Formitect" }],
   creator: "Formitect",
   applicationName: "Formitect",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", type: "image/png", sizes: "128x128" },
+    ],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
