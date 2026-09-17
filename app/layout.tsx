@@ -16,57 +16,60 @@ const geistMono = Geist_Mono({
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(APP_URL),
-  title: {
-    default: "Formitect — build beautiful forms in minutes",
-    template: "%s — Formitect",
-  },
-  description:
-    "Create beautiful forms, share them anywhere, and collect submissions — no code needed. Free forever.",
-  keywords: [
-    "form builder",
-    "create forms online",
-    "free form maker",
-    "collect responses",
-    "survey builder",
-    "Formitect",
-  ],
-  authors: [{ name: "Formitect" }],
-  creator: "Formitect",
-  applicationName: "Formitect",
-  icons: {
-    icon: [
-      { url: "/favicon.png", type: "image/png" },
+import { getSiteSettings } from "@/lib/settings";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const title = `${settings.siteName} — ${settings.tagline}`;
+  const description = "Create beautiful forms, share them anywhere, and collect submissions — no code needed. Free forever.";
+
+  return {
+    metadataBase: new URL(APP_URL),
+    title: {
+      default: title,
+      template: `%s — ${settings.siteName}`,
+    },
+    description,
+    keywords: [
+      "form builder",
+      "create forms online",
+      "free form maker",
+      "collect responses",
+      "survey builder",
+      settings.siteName,
     ],
-    apple: [{ url: "/apple-icon.png", type: "image/png" }],
-  },
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "/",
-    siteName: "Formitect",
-    title: "Formitect — build beautiful forms in minutes",
-    description:
-      "Create beautiful forms, share them anywhere, and collect submissions — no code needed.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Formitect — build beautiful forms in minutes",
-    description:
-      "Create beautiful forms, share them anywhere, and collect submissions — no code needed.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
-  },
-  category: "productivity",
-  other: {
-    "google-site-verification": "AZW5IzuCr83Xed0Z8JhuVXb30Q470Cve3Y3T8RV75js",
-  },
-};
+    authors: [{ name: settings.siteName }],
+    creator: settings.siteName,
+    applicationName: settings.siteName,
+    icons: {
+      icon: [{ url: "/favicon.png", type: "image/png" }],
+      apple: [{ url: "/apple-icon.png", type: "image/png" }],
+    },
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      url: "/",
+      siteName: settings.siteName,
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+    },
+    category: "productivity",
+    other: {
+      "google-site-verification": "AZW5IzuCr83Xed0Z8JhuVXb30Q470Cve3Y3T8RV75js",
+    },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: [

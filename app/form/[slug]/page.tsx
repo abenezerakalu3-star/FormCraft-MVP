@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: form.title,
     description: form.description || `Fill out this form and submit your response.`,
     alternates: { canonical: `/form/${slug}` },
-    robots: { index: true, follow: true },
+    robots: { index: false, follow: false },
   };
 }
 
