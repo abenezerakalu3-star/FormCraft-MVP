@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
 import { createFormSchema } from "@/lib/validate";
 import { newSlug } from "@/lib/fields";
+import { effectivePlan, isUnlimited, planLimitsFor } from "@/lib/entitlements";
+import { planName } from "@/lib/plans";
 
 export async function POST(req: Request) {
   const user = await requireUser();
@@ -11,6 +13,20 @@ export async function POST(req: Request) {
   const parsed = createFormSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+  }
+
+  const limits = planLimitsFor(user);
+  if (!isUnlimited(limits.forms)) {
+    const count = await prisma.form.count({ where: { userId: user.id } });
+    if (count >= limits.forms) {
+      return NextResponse.json(
+        {
+          error: `Your ${planName(effectivePlan(user))} plan allows up to ${limits.forms} forms. Upgrade to create more.`,
+          upgrade: true,
+        },
+        { status: 403 }
+      );
+    }
   }
 
   const form = await prisma.form.create({

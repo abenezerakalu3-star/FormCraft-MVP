@@ -4,11 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ClipboardList, Menu, Plus, UserRound, X } from "lucide-react";
+import { ClipboardList, CreditCard, Menu, Plus, UserRound, X } from "lucide-react";
 
 const NAV = [
   { href: "/dashboard", label: "My forms", icon: ClipboardList },
   { href: "/dashboard/forms/new", label: "New form", icon: Plus },
+  { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
   { href: "/dashboard/profile", label: "Profile", icon: UserRound },
 ] as const;
 

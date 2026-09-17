@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { planLimitsFor } from "@/lib/entitlements";
 import FormViewer from "@/components/form-viewer";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -30,11 +31,25 @@ export default async function PublicFormPage({
     where: { slug },
     include: {
       fields: { orderBy: { order: "asc" } },
-      user: { select: { blocked: true } },
+      user: {
+        select: {
+          blocked: true,
+          plan: true,
+          planStatus: true,
+          currentPeriodEnd: true,
+        },
+      },
     },
   });
 
   if (!form || !form.published || form.user.blocked) notFound();
 
-  return <FormViewer form={JSON.parse(JSON.stringify(form))} />;
+  const showBranding = !planLimitsFor(form.user).removeBranding;
+
+  return (
+    <FormViewer
+      form={JSON.parse(JSON.stringify(form))}
+      showBranding={showBranding}
+    />
+  );
 }

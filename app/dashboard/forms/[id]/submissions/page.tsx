@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink, Inbox } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
+import { planLimitsFor } from "@/lib/entitlements";
 import CopyButton from "@/components/copy-button";
 import ExportCsv from "@/components/export-csv";
 import SubmissionsTable from "@/components/submissions-table";
@@ -34,6 +35,8 @@ export default async function SubmissionsPage({
 
   const totalViews = await prisma.formView.count({ where: { formId: id } });
   const completionRate = totalViews > 0 ? Math.round((total / totalViews) * 100) : 0;
+
+  const canExport = planLimitsFor(user).exports;
 
   return (
     <div className="animate-fade-in">
@@ -97,15 +100,24 @@ export default async function SubmissionsPage({
           </code>
           <CopyButton slug={form.slug} />
           <div className="h-5 w-px bg-line" />
-          <ExportCsv
-            title={form.title}
-            fields={form.fields.map((f) => ({ id: f.id, label: f.label }))}
-            rows={form.submissions.map((s) => ({
-              id: s.id,
-              createdAt: s.createdAt.toISOString(),
-              data: s.data as Record<string, string>,
-            }))}
-          />
+          {canExport ? (
+            <ExportCsv
+              title={form.title}
+              fields={form.fields.map((f) => ({ id: f.id, label: f.label }))}
+              rows={form.submissions.map((s) => ({
+                id: s.id,
+                createdAt: s.createdAt.toISOString(),
+                data: s.data as Record<string, string>,
+              }))}
+            />
+          ) : (
+            <Link
+              href="/dashboard/billing"
+              className="text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+            >
+              Upgrade to export
+            </Link>
+          )}
         </div>
       )}
 

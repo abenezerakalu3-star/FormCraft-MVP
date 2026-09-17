@@ -2,73 +2,71 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, Loader2, Sparkles } from "lucide-react";
+import { PLANS, type BillingInterval, type PlanDefinition } from "@/lib/plans";
 
-interface Tier {
-  name: string;
-  tagline: string;
-  monthly: number;
-  annual: number;
-  cta: string;
-  href: string;
-  highlight?: boolean;
-  features: string[];
+function SubscribeButton({
+  tier,
+  interval,
+  isAuthenticated,
+}: {
+  tier: PlanDefinition;
+  interval: BillingInterval;
+  isAuthenticated: boolean;
+}) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const className = `mt-6 w-full justify-center ${tier.highlight ? "btn-primary" : "btn-secondary"}`;
+
+  if (tier.key === "free" || !isAuthenticated) {
+    const href =
+      tier.key === "free"
+        ? isAuthenticated
+          ? "/dashboard"
+          : "/register"
+        : `/register?plan=${tier.key}&interval=${interval}`;
+    return (
+      <Link href={href} className={className}>
+        {tier.cta}
+      </Link>
+    );
+  }
+
+  async function subscribe() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/billing/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: tier.key, interval }),
+      });
+      const data = await res.json().catch(() => null);
+      if (res.status === 401) {
+        router.push(`/register?plan=${tier.key}&interval=${interval}`);
+        return;
+      }
+      if (!res.ok || !data?.url) {
+        alert(data?.error || "Could not start checkout. Please try again.");
+        return;
+      }
+      window.location.assign(data.url);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <button onClick={subscribe} disabled={loading} className={`${className} disabled:opacity-60`}>
+      {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+      {tier.cta}
+    </button>
+  );
 }
 
-const TIERS: Tier[] = [
-  {
-    name: "Free",
-    tagline: "For getting your first form out the door.",
-    monthly: 0,
-    annual: 0,
-    cta: "Start free",
-    href: "/register",
-    features: [
-      "Up to 3 forms",
-      "100 responses / month",
-      "All core field types",
-      "Basic analytics",
-      "Email notifications",
-      "Formitect branding",
-    ],
-  },
-  {
-    name: "Pro",
-    tagline: "For creators and small teams collecting at scale.",
-    monthly: 19,
-    annual: 15,
-    cta: "Get Pro",
-    href: "/register",
-    highlight: true,
-    features: [
-      "Unlimited forms",
-      "10,000 responses / month",
-      "File uploads & exports (CSV, Excel, PDF)",
-      "Advanced analytics",
-      "Remove Formitect branding",
-      "Priority email support",
-    ],
-  },
-  {
-    name: "Team",
-    tagline: "For organizations that need collaboration and control.",
-    monthly: 49,
-    annual: 39,
-    cta: "Contact us",
-    href: "/contact",
-    features: [
-      "Everything in Pro",
-      "Unlimited responses",
-      "Team members & shared workspace",
-      "Roles & permissions",
-      "Audit log",
-      "Dedicated support",
-    ],
-  },
-];
-
-export default function PricingTiers() {
+export default function PricingTiers({ isAuthenticated = false }: { isAuthenticated?: boolean }) {
   const [annual, setAnnual] = useState(true);
+  const interval: BillingInterval = annual ? "year" : "month";
 
   return (
     <div>
@@ -101,12 +99,12 @@ export default function PricingTiers() {
       </div>
 
       <div className="mx-auto grid max-w-6xl gap-6 px-6 py-12 lg:grid-cols-3">
-        {TIERS.map((tier) => {
+        {PLANS.map((tier) => {
           const price = annual ? tier.annual : tier.monthly;
           const yearly = tier.annual * 12;
           return (
             <div
-              key={tier.name}
+              key={tier.key}
               className={`card relative flex flex-col p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
                 tier.highlight ? "border-indigo-500/60 shadow-lg shadow-indigo-900/5 lg:-mt-3" : ""
               }`}
@@ -128,12 +126,7 @@ export default function PricingTiers() {
                 {tier.monthly > 0 && annual ? `Billed $${yearly} yearly` : "\u00A0"}
               </p>
 
-              <Link
-                href={tier.href}
-                className={`mt-6 w-full justify-center ${tier.highlight ? "btn-primary" : "btn-secondary"}`}
-              >
-                {tier.cta}
-              </Link>
+              <SubscribeButton tier={tier} interval={interval} isAuthenticated={isAuthenticated} />
 
               <ul className="mt-7 space-y-3">
                 {tier.features.map((feature) => (

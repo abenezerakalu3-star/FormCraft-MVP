@@ -4,6 +4,7 @@ import { submissionSchema } from "@/lib/validate";
 import { splitOptions } from "@/lib/fields";
 import { parseFileValue } from "@/lib/files";
 import { sendFirstSubmissionNotification, sendSubmissionNotification } from "@/lib/email";
+import { isUnlimited, planLimitsFor } from "@/lib/entitlements";
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
@@ -18,12 +19,38 @@ export async function POST(req: Request) {
     where: { slug },
     include: {
       fields: { orderBy: { order: "asc" } },
-      user: { select: { blocked: true, email: true, name: true } },
+      user: {
+        select: {
+          id: true,
+          blocked: true,
+          email: true,
+          name: true,
+          plan: true,
+          planStatus: true,
+          currentPeriodEnd: true,
+        },
+      },
     },
   });
 
   if (!form || !form.published || form.user.blocked) {
     return NextResponse.json({ error: "Form not found" }, { status: 404 });
+  }
+
+  const ownerLimits = planLimitsFor(form.user);
+  if (!isUnlimited(ownerLimits.responsesPerMonth)) {
+    const monthStart = new Date();
+    monthStart.setDate(1);
+    monthStart.setHours(0, 0, 0, 0);
+    const monthlyCount = await prisma.submission.count({
+      where: { form: { userId: form.user.id }, createdAt: { gte: monthStart } },
+    });
+    if (monthlyCount >= ownerLimits.responsesPerMonth) {
+      return NextResponse.json(
+        { error: "This form is not accepting responses right now." },
+        { status: 429 }
+      );
+    }
   }
 
   for (const field of form.fields) {

@@ -47,7 +47,14 @@ export default function RegisterPage() {
         setError(data.error || "Something went wrong");
         return;
       }
-      router.push("/dashboard");
+      const params = new URLSearchParams(window.location.search);
+      const plan = params.get("plan");
+      const interval = params.get("interval") === "year" ? "year" : "month";
+      if (plan === "pro" || plan === "team") {
+        router.push(`/dashboard/billing?plan=${plan}&interval=${interval}`);
+      } else {
+        router.push("/dashboard");
+      }
       router.refresh();
     } finally {
       setLoading(false);

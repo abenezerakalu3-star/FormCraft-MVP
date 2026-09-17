@@ -24,7 +24,13 @@ interface FormData {
   fields: FieldData[];
 }
 
-export default function FormViewer({ form }: { form: FormData }) {
+export default function FormViewer({
+  form,
+  showBranding = true,
+}: {
+  form: FormData;
+  showBranding?: boolean;
+}) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -271,9 +277,11 @@ export default function FormViewer({ form }: { form: FormData }) {
               )}
             </button>
 
-            <p className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
-              Powered by <span className="font-semibold text-gray-500 dark:text-gray-400">Formitect</span>
-            </p>
+            {showBranding && (
+              <p className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
+                Powered by <span className="font-semibold text-gray-500 dark:text-gray-400">Formitect</span>
+              </p>
+            )}
           </form>
         )}
       </div>

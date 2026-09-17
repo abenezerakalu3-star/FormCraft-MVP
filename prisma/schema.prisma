@@ -18,6 +18,13 @@ model User {
   onboardingCompleted Boolean   @default(false)
   warnings           Json       @default("[]")
   permissions        Json       @default("[]")
+  plan               String     @default("free")
+  planStatus         String?
+  polarCustomerId    String?    @unique
+  polarSubscriptionId String?   @unique
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean    @default(false)
+  billingInterval    String?
   createdAt          DateTime   @default(now())
   forms              Form[]
   posts              BlogPost[]

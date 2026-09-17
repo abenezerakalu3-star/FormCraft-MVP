@@ -1,4 +1,5 @@
 import { getSiteSettings } from "@/lib/settings";
+import { getSessionUser } from "@/lib/auth";
 import PublicShell from "@/components/public-shell";
 import PricingTiers from "@/components/pricing-tiers";
 
@@ -34,6 +35,7 @@ const faqs = [
 
 export default async function PricingPage() {
   const settings = await getSiteSettings();
+  const user = await getSessionUser();
 
   return (
     <PublicShell settings={settings}>
@@ -49,7 +51,7 @@ export default async function PricingPage() {
         </p>
       </section>
 
-      <PricingTiers />
+      <PricingTiers isAuthenticated={Boolean(user)} />
 
       <section className="mx-auto max-w-3xl px-6 pb-20">
         <h2 className="text-center text-2xl font-bold tracking-tight">Frequently asked questions</h2>
