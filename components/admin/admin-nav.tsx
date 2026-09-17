@@ -12,6 +12,7 @@ import {
   Settings,
   ShieldCheck,
   Users,
+  CreditCard,
 } from "lucide-react";
 import { Permission, resolvePermissions } from "@/lib/permissions";
 
@@ -23,6 +24,7 @@ const MAIN = [
 ];
 
 const SYSTEM = [
+  { href: "/admin/billing", label: "Billing", icon: CreditCard, match: (p: string) => p.startsWith("/admin/billing"), perm: "billing" as Permission },
   { href: "/admin/messages", label: "Messages", icon: MessagesSquare, match: (p: string) => p.startsWith("/admin/messages"), perm: "messages" as Permission },
   { href: "/admin/admins", label: "Admins", icon: ShieldCheck, match: (p: string) => p.startsWith("/admin/admins"), perm: "admins" as Permission },
   { href: "/admin/settings", label: "Settings", icon: Settings, match: (p: string) => p.startsWith("/admin/settings"), perm: "settings" as Permission },

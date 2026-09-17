@@ -5,6 +5,7 @@ export const PERMISSIONS = [
   "messages",
   "settings",
   "admins",
+  "billing",
 ] as const;
 
 export type Permission = (typeof PERMISSIONS)[number];
@@ -16,6 +17,7 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   messages: "Manage messages",
   settings: "Change site settings",
   admins: "Manage admins",
+  billing: "Manage billing",
 };
 
 export type PermissionJson = unknown;

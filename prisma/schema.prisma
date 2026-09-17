@@ -22,6 +22,8 @@ model User {
   planStatus         String?
   polarCustomerId    String?    @unique
   polarSubscriptionId String?   @unique
+  polarProductId     String?
+  currentPeriodStart DateTime?
   currentPeriodEnd   DateTime?
   cancelAtPeriodEnd  Boolean    @default(false)
   billingInterval    String?
@@ -30,6 +32,38 @@ model User {
   posts              BlogPost[]
   resetTokens        PasswordResetToken[]
   verifyTokens       VerificationToken[]
+  payments           Payment[]
+}
+
+model Payment {
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  polarId             String   @unique // Polar order/payment ID
+  polarCustomerId     String?
+  polarSubscriptionId String?
+  polarProductId      String?
+  amount              Int      // Amount in cents
+  currency            String
+  status              String   // e.g. "succeeded"
+  plan                String?
+  billingInterval     String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model WebhookEvent {
+  id         String   @id @default(cuid())
+  polarId    String   @unique
+  type       String
+  processed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  processedAt DateTime?
+
+  @@index([polarId])
 }
 
 model Form {
