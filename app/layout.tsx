@@ -37,8 +37,7 @@ export const metadata: Metadata = {
   applicationName: "Formitect",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/logo.png", type: "image/png", sizes: "128x128" },
+      { url: "/favicon.png", type: "image/png" },
     ],
     apple: [{ url: "/apple-icon.png", type: "image/png" }],
   },
