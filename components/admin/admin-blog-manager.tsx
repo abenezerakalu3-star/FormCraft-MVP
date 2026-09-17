@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2, Newspaper, Pencil, Plus, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Newspaper, Pencil, Plus, Trash2, Image as ImageIcon, List, Bold, Code, Link2 } from "lucide-react";
 import { slugify } from "@/lib/slugify";
 
 export interface AdminBlogPost {
@@ -46,6 +46,60 @@ export default function AdminBlogManager({ posts }: { posts: AdminBlogPost[] }) 
       if (editing.slugEdited) return { ...prev, title: value };
       return { ...prev, title: value, slug: slugify(value) };
     });
+  }
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  function insertMarkdown(prefix: string, suffix: string = "") {
+    const el = textareaRef.current;
+    if (!el) {
+      setForm((prev) => ({ ...prev, content: prev.content + prefix + suffix }));
+      return;
+    }
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const text = form.content;
+    const before = text.substring(0, start);
+    const selected = text.substring(start, end);
+    const after = text.substring(end);
+
+    const newContent = before + prefix + selected + suffix + after;
+    setForm((prev) => ({ ...prev, content: newContent }));
+
+    setTimeout(() => {
+      el.focus();
+      el.setSelectionRange(start + prefix.length, start + prefix.length + selected.length);
+    }, 0);
+  }
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const placeholder = `\n![Uploading ${file.name}...](\#)\n`;
+    insertMarkdown(placeholder);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const mdImage = `\n![${data.name}](${data.url})\n`;
+        setForm(prev => ({ ...prev, content: prev.content.replace(placeholder, mdImage) }));
+      } else {
+        alert(data.error || "Upload failed");
+        setForm(prev => ({ ...prev, content: prev.content.replace(placeholder, "") }));
+      }
+    } catch (err) {
+      alert("Upload failed");
+      setForm(prev => ({ ...prev, content: prev.content.replace(placeholder, "") }));
+    }
+    e.target.value = "";
   }
 
   async function save(e: React.FormEvent) {
@@ -154,15 +208,39 @@ export default function AdminBlogManager({ posts }: { posts: AdminBlogPost[] }) 
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium">Content</label>
+            <div className="mb-1.5 flex items-center justify-between">
+              <label className="text-sm font-medium">Content</label>
+              <div className="flex items-center gap-1 text-muted">
+                <button type="button" onClick={() => insertMarkdown("**", "**")} className="rounded p-1.5 hover:bg-surface hover:text-foreground" title="Bold">
+                  <Bold className="h-4 w-4" />
+                </button>
+                <button type="button" onClick={() => insertMarkdown("`", "`")} className="rounded p-1.5 hover:bg-surface hover:text-foreground" title="Code">
+                  <Code className="h-4 w-4" />
+                </button>
+                <button type="button" onClick={() => insertMarkdown("[", "](url)")} className="rounded p-1.5 hover:bg-surface hover:text-foreground" title="Link">
+                  <Link2 className="h-4 w-4" />
+                </button>
+                <button type="button" onClick={() => insertMarkdown("\n- ", "")} className="rounded p-1.5 hover:bg-surface hover:text-foreground" title="Bullet List">
+                  <List className="h-4 w-4" />
+                </button>
+                <label className="cursor-pointer rounded p-1.5 hover:bg-surface hover:text-foreground" title="Upload Image">
+                  <ImageIcon className="h-4 w-4" />
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                </label>
+              </div>
+            </div>
             <textarea
+              ref={textareaRef}
               value={form.content}
               onChange={(e) => setForm((prev) => ({ ...prev, content: e.target.value }))}
-              rows={9}
-              className="input-field resize-y"
+              rows={12}
+              className="input-field resize-y font-mono text-sm"
               placeholder="Write the article here. Blank lines create new paragraphs."
               required
             />
+            <p className="mt-1.5 text-xs text-muted">
+              Markdown supported: **bold**, `code`, [link](url), ![image](url), - lists, > quotes
+            </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3">

@@ -1,18 +1,25 @@
 import { Fragment } from "react";
 
-type Token = { type: "text"; value: string } | { type: "bold"; value: string } | { type: "code"; value: string };
+type Token = { type: "text"; value: string } | { type: "bold"; value: string } | { type: "code"; value: string } | { type: "image"; alt: string; url: string } | { type: "link"; text: string; url: string }; value: string } | { type: "bold"; value: string } | { type: "code"; value: string };
 
 function tokenizeInline(text: string): Token[] {
   const tokens: Token[] = [];
-  const pattern = /(\*\*[^*]+\*\*|`[^`]+`)/g;
+  const pattern = /(!\[([^\]]*)\]\(([^)]+)\))|(\[([^\]]+)\]\(([^)]+)\))|(\*\*[^*]+\*\*)|(`[^`]+`)/g;
 
   let last = 0;
   let m: RegExpExecArray | null;
   while ((m = pattern.exec(text)) !== null) {
     if (m.index > last) tokens.push({ type: "text", value: text.slice(last, m.index) });
     const seg = m[0];
-    if (seg[0] === "`") tokens.push({ type: "code", value: seg.slice(1, -1) });
-    else tokens.push({ type: "bold", value: seg.slice(2, -2) });
+    if (seg.startsWith("![")) {
+      tokens.push({ type: "image", alt: m[2], url: m[3] });
+    } else if (seg.startsWith("[")) {
+      tokens.push({ type: "link", text: m[5], url: m[6] });
+    } else if (seg.startsWith("`")) {
+      tokens.push({ type: "code", value: seg.slice(1, -1) });
+    } else if (seg.startsWith("**")) {
+      tokens.push({ type: "bold", value: seg.slice(2, -2) });
+    }
     last = m.index + seg.length;
   }
   if (last < text.length) tokens.push({ type: "text", value: text.slice(last) });
@@ -35,6 +42,17 @@ function renderInline(text: string) {
         <strong key={i} className="font-semibold">
           {t.value}
         </strong>
+      );
+    if (t.type === "image")
+      return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img key={i} src={t.url} alt={t.alt} className="my-6 max-w-full rounded-2xl border border-line shadow-sm" />
+      );
+    if (t.type === "link")
+      return (
+        <a key={i} href={t.url} className="text-indigo-600 underline decoration-indigo-500/30 underline-offset-4 hover:decoration-indigo-500 dark:text-indigo-400">
+          {t.text}
+        </a>
       );
     return <Fragment key={i}>{t.value}</Fragment>;
   });
