@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DollarSign, Users, Activity, XCircle } from "lucide-react";
+import { Coins, Activity, Star, Building2, UserMinus } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -36,11 +36,11 @@ export default async function AdminBillingPage() {
     .reduce((acc, p) => acc + p.amount, 0) / 100;
 
   const stats = [
-    { label: "Total Revenue", value: `$${totalRevenue.toFixed(2)}`, icon: DollarSign, tone: "text-emerald-600 dark:text-emerald-400" },
+    { label: "Total Revenue", value: `$${totalRevenue.toFixed(2)}`, icon: Coins, tone: "text-emerald-600 dark:text-emerald-400" },
     { label: "Active Subscriptions", value: activeSubscriptions.length, icon: Activity, tone: "text-indigo-600 dark:text-indigo-400" },
-    { label: "Pro Subscribers", value: proSubscribers.length, icon: Users, tone: "text-blue-600 dark:text-blue-400" },
-    { label: "Team Subscribers", value: teamSubscribers.length, icon: Users, tone: "text-purple-600 dark:text-purple-400" },
-    { label: "Canceled", value: canceled.length, icon: XCircle, tone: "text-amber-600 dark:text-amber-400" },
+    { label: "Pro Subscribers", value: proSubscribers.length, icon: Star, tone: "text-blue-600 dark:text-blue-400" },
+    { label: "Team Subscribers", value: teamSubscribers.length, icon: Building2, tone: "text-purple-600 dark:text-purple-400" },
+    { label: "Canceled", value: canceled.length, icon: UserMinus, tone: "text-amber-600 dark:text-amber-400" },
   ];
 
   return (
