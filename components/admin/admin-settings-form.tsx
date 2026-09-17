@@ -11,7 +11,8 @@ const FIELDS: { key: keyof SiteSettings; label: string; hint?: string; type?: "t
   { key: "heroTitle", label: "Hero headline", type: "text" },
   { key: "heroSubtitle", label: "Hero subheadline", type: "textarea" },
   { key: "heroCta", label: "Primary call-to-action text", type: "text", hint: "e.g. Get started — it's free" },
-  { key: "announcement", label: "Announcement bar", type: "textarea", hint: "Shown at the very top of the website. Leave empty to hide it." },
+  { key: "announcement", label: "Announcement text", type: "textarea", hint: "Shown at the very top of the website. Leave empty to hide it." },
+  { key: "announcementUrl", label: "Announcement link (optional)", type: "text", hint: "URL the announcement bar links to when clicked." },
   { key: "footerNote", label: "Footer note", type: "text" },
   { key: "contactEmail", label: "Contact email", type: "email" },
 ];

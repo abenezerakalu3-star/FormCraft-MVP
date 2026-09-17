@@ -8,6 +8,7 @@ export const DEFAULT_SETTINGS = {
     "Create beautiful forms, share them anywhere, and watch responses roll in. No code needed.",
   heroCta: "Create my first form",
   announcement: "",
+  announcementUrl: "",
   footerNote: "Made for people who love good forms.",
   contactEmail: "hello@formitect.app",
 } as const;

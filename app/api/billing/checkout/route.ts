@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       successUrl: `${APP_URL}/dashboard/billing?checkout=success`,
       returnUrl: `${APP_URL}/pricing`,
       customerEmail: user.email,
-      customerName: user.name ?? undefined,
+      customerName: user.name || undefined,
       externalCustomerId: user.id,
       metadata: { userId: user.id, plan, interval },
     });

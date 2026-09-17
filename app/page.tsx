@@ -182,9 +182,18 @@ export default async function Home() {
       />
       {/* Announcement bar */}
       {settings.announcement ? (
-        <div className="bg-foreground px-6 py-2.5 text-center text-sm font-semibold text-surface dark:bg-surface dark:text-foreground">
-          {settings.announcement}
-        </div>
+        settings.announcementUrl ? (
+          <Link href={settings.announcementUrl} className="group block bg-foreground px-6 py-2.5 text-center text-sm font-semibold text-surface hover:bg-foreground/90 dark:bg-surface dark:text-foreground dark:hover:bg-surface/90">
+            <span className="inline-flex items-center gap-2">
+              {settings.announcement}
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+        ) : (
+          <div className="bg-foreground px-6 py-2.5 text-center text-sm font-semibold text-surface dark:bg-surface dark:text-foreground">
+            {settings.announcement}
+          </div>
+        )
       ) : null}
 
       {/* Navbar */}
