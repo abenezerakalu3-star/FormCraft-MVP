@@ -30,6 +30,12 @@ export default function PublicShell({
             <Link href="/pricing" className="nav-link transition-colors hover:text-foreground">
               Pricing
             </Link>
+            <Link href="/guide" className="nav-link transition-colors hover:text-foreground">
+              Guide
+            </Link>
+            <Link href="/contact" className="nav-link transition-colors hover:text-foreground">
+              Contact
+            </Link>
             <div className="flex items-center gap-3">
               <ThemeToggle />
               <Link href="/register" className="btn-primary !py-2 text-sm">
@@ -44,6 +50,8 @@ export default function PublicShell({
                 { href: "/", label: "Home" },
                 { href: "/blog", label: "Blog" },
                 { href: "/pricing", label: "Pricing" },
+                { href: "/guide", label: "Guide" },
+                { href: "/contact", label: "Contact" },
                 { href: "/register", label: "Start free" },
               ]}
             />

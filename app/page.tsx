@@ -207,14 +207,17 @@ export default async function Home() {
             <a href="#features" className="nav-link transition-colors hover:text-foreground">
               Features
             </a>
-            <a href="#how" className="nav-link transition-colors hover:text-foreground">
-              How it works
-            </a>
-            <Link href="/blog" className="nav-link transition-colors hover:text-foreground">
-              Blog
+            <Link href="/guide" className="nav-link transition-colors hover:text-foreground">
+              Guide
             </Link>
             <Link href="/pricing" className="nav-link transition-colors hover:text-foreground">
               Pricing
+            </Link>
+            <Link href="/blog" className="nav-link transition-colors hover:text-foreground">
+              Blog
+            </Link>
+            <Link href="/contact" className="nav-link transition-colors hover:text-foreground">
+              Contact
             </Link>
           </div>
           <div className="flex items-center gap-3">
@@ -236,9 +239,10 @@ export default async function Home() {
             <MobileMenu
               items={[
                 { href: "#features", label: "Features" },
-                { href: "#how", label: "How it works" },
-                { href: "/blog", label: "Blog" },
+                { href: "/guide", label: "Guide" },
                 { href: "/pricing", label: "Pricing" },
+                { href: "/blog", label: "Blog" },
+                { href: "/contact", label: "Contact" },
                 ...(user
                   ? [{ href: homeHref, label: user.role === "admin" ? "Go to admin" : "Go to dashboard" }]
                   : [
@@ -293,9 +297,9 @@ export default async function Home() {
                   </Link>
                 </Magnetic>
                 <Magnetic strength={0.2}>
-                  <a href="#how" className="btn-secondary px-6 py-3 text-base">
+                  <Link href="/guide" className="btn-secondary px-6 py-3 text-base">
                     See how it works
-                  </a>
+                  </Link>
                 </Magnetic>
               </div>
             </FadeIn>

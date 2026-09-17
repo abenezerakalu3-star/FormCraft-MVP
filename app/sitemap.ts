@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-const STATIC = ["", "/blog", "/pricing", "/contact", "/privacy", "/terms", "/login", "/register"];
+const STATIC = ["", "/blog", "/pricing", "/guide", "/contact", "/privacy", "/terms", "/login", "/register"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await prisma.blogPost
