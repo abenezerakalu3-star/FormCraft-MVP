@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { submissionSchema } from "@/lib/validate";
 import { splitOptions } from "@/lib/fields";
 import { parseFileValue } from "@/lib/files";
-import { sendSubmissionNotification } from "@/lib/email";
+import { sendFirstSubmissionNotification, sendSubmissionNotification } from "@/lib/email";
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
@@ -71,8 +71,17 @@ export async function POST(req: Request) {
   });
 
   // Notify the owner (fire-and-forget, never block the response).
-  if (form.notifyOnSubmission) {
-    const count = await prisma.submission.count({ where: { formId: form.id } });
+  const [count, viewCount] = await Promise.all([
+    prisma.submission.count({ where: { formId: form.id } }),
+    prisma.formView.count({ where: { formId: form.id } }),
+  ]);
+
+  if (count === 1) {
+    // Milestone: the first person ever viewed and filled this form.
+    sendFirstSubmissionNotification(form.user.email, form.user.name, form.title, viewCount).catch(
+      (err) => console.error("[submissions] First-submission notification failed:", err)
+    );
+  } else if (form.notifyOnSubmission) {
     sendSubmissionNotification(form.user.email, form.user.name, form.title, count).catch(
       (err) => console.error("[submissions] Notification failed:", err)
     );

@@ -166,6 +166,34 @@ ${brandFooter()}`;
   await sendEmail(ownerEmail, `New response on "${formTitle}"`, html);
 }
 
+export async function sendFirstSubmissionNotification(
+  ownerEmail: string,
+  ownerName: string | null,
+  formTitle: string,
+  viewCount: number
+) {
+  if (!isEmailConfigured()) return;
+
+  const html = `
+${brandHeader()}
+<div style="font-size: 15px; line-height: 1.6; color: #111827;">
+  <p>Hi ${ownerName || "there"},</p>
+  <p>Great news — someone viewed your form <strong>${formTitle}</strong> and submitted their first response!</p>
+  <p style="color: #6b7280;">
+    So far <strong>${viewCount} person${viewCount === 1 ? "" : "s"}</strong> has opened it and the first
+    submission is in. Keep an eye on the responses tab to see the results roll in.
+  </p>
+  <div style="margin: 24px 0;">
+    <a href="${APP_URL}/dashboard" style="display: inline-block; padding: 12px 28px; background: #4f46e5; color: white; font-weight: 600; font-size: 14px; border-radius: 12px; text-decoration: none;">
+      View responses
+    </a>
+  </div>
+</div>
+${brandFooter()}`;
+
+  await sendEmail(ownerEmail, `First response on "${formTitle}" 🎉`, html);
+}
+
 export { isEmailConfigured, generateToken, hashToken };
 
 function generateToken(): string {
