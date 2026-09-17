@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/auth";
 import { blogPostSchema } from "@/lib/validate";
 import { slugify } from "@/lib/slugify";
+import { revalidatePath } from "next/cache";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const admin = await requirePermission("blog");
@@ -40,6 +41,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     },
   });
 
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${slug}`);
+  if (slug !== post.slug) revalidatePath(`/blog/${post.slug}`);
   return NextResponse.json({ ok: true, post: updated });
 }
 
@@ -53,5 +57,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   }
 
   await prisma.blogPost.delete({ where: { id } });
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${post.slug}`);
   return NextResponse.json({ ok: true });
 }

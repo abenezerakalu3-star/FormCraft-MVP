@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/auth";
 import { blogPostSchema } from "@/lib/validate";
 import { slugify } from "@/lib/slugify";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   const admin = await requirePermission("blog");
@@ -31,5 +32,7 @@ export async function POST(req: Request) {
     },
   });
 
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${slug}`);
   return NextResponse.json({ ok: true, post }, { status: 201 });
 }
