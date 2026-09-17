@@ -29,7 +29,6 @@ import Magnetic from "@/components/motion/magnetic";
 import TiltCard from "@/components/motion/tilt-card";
 import { ParallaxLayer, PointerParallax } from "@/components/motion/pointer-parallax";
 import SiteFooter from "@/components/site-footer";
-import BuyMeCoffeeButton from "@/components/buy-me-coffee-button";
 import MobileMenu from "@/components/mobile-menu";
 
 export async function generateMetadata() {
@@ -626,9 +625,6 @@ export default async function Home() {
                 <Download className="h-3.5 w-3.5" /> Export your first CSV in under a minute
               </p>
             </div>
-          </div>
-          <div className="mt-6 flex justify-center">
-            <BuyMeCoffeeButton />
           </div>
         </FadeIn>
       </section>

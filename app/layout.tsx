@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import MotionProvider from "@/components/motion/motion-provider";
-import BuyMeCoffeeWidget from "@/components/buy-me-coffee-widget";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -79,7 +78,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col">
         <MotionProvider>
           <ThemeProvider>{children}</ThemeProvider>
-          <BuyMeCoffeeWidget />
         </MotionProvider>
       </body>
     </html>
