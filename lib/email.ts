@@ -1,32 +1,41 @@
 import crypto from "crypto";
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const RESEND_FROM = process.env.RESEND_FROM_EMAIL || "Formitect <noreply@formitect.app>";
+const BREVO_API_KEY = process.env.BREVO_API_KEY;
+const EMAIL_FROM = process.env.EMAIL_FROM || "noreply@formitect.app";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 function isEmailConfigured(): boolean {
-  return Boolean(RESEND_API_KEY && RESEND_API_KEY !== "re_" + "placeholder");
+  return Boolean(BREVO_API_KEY && BREVO_API_KEY.trim().length > 0);
+}
+
+function parseSender(raw: string): { name: string; email: string } {
+  const m = raw.match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
+  if (m) return { name: m[1], email: m[2] };
+  return { name: "Formitect", email: raw };
 }
 
 async function sendEmail(to: string, subject: string, html: string) {
   if (!isEmailConfigured()) {
-    console.warn("[Formitect] Email not configured (RESEND_API_KEY missing). Email not sent.");
+    console.warn("[Formitect] Email not configured (BREVO_API_KEY missing). Email not sent.");
     console.warn(`[Formitect] Email preview — To: ${to} | Subject: ${subject}`);
     console.warn(`[Formitect] HTML preview:\n${html}`);
-    return;
+    throw new Error("Email is not configured. Set BREVO_API_KEY in your environment.");
   }
 
-  const res = await fetch("https://api.resend.com/emails", {
+  const sender = parseSender(EMAIL_FROM);
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      "api-key": BREVO_API_KEY!,
       "Content-Type": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify({
-      from: RESEND_FROM,
-      to: [to],
+      sender,
+      to: [{ email: to }],
       subject,
-      html,
+      htmlContent: html,
     }),
   });
 
