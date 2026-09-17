@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-type Token = { type: "text"; value: string } | { type: "bold"; value: string } | { type: "code"; value: string } | { type: "image"; alt: string; url: string } | { type: "link"; text: string; url: string }; value: string } | { type: "bold"; value: string } | { type: "code"; value: string };
+type Token = { type: "text"; value: string } | { type: "bold"; value: string } | { type: "code"; value: string } | { type: "image"; alt: string; url: string } | { type: "link"; text: string; url: string };
 
 function tokenizeInline(text: string): Token[] {
   const tokens: Token[] = [];

@@ -239,7 +239,7 @@ export default function AdminBlogManager({ posts }: { posts: AdminBlogPost[] }) 
               required
             />
             <p className="mt-1.5 text-xs text-muted">
-              Markdown supported: **bold**, `code`, [link](url), ![image](url), - lists, > quotes
+              Markdown supported: **bold**, `code`, [link](url), ![image](url), - lists, {">"} quotes
             </p>
           </div>
 

@@ -5,8 +5,6 @@ import { NextResponse } from "next/server";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getS3Bucket, getS3Client, isS3Configured } from "@/lib/s3";
 
-export const config = { api: { bodyParser: false } };
-
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 const ALLOWED = new Set([
