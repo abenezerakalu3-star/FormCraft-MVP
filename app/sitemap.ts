@@ -1,7 +1,8 @@
+import { getAppUrl } from "@/lib/url";
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const APP_URL = getAppUrl();
 const STATIC = ["", "/blog", "/pricing", "/guide", "/contact", "/privacy", "/terms", "/login", "/register"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

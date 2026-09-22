@@ -1,3 +1,4 @@
+import { getAppUrl } from "@/lib/url";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink, Inbox } from "lucide-react";
@@ -96,7 +97,7 @@ export default async function SubmissionsPage({
         <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3 shadow-sm animate-fade-up">
           <span className="chip bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">Share link</span>
           <code className="flex-1 truncate text-sm text-gray-600">
-            {`${process.env.NEXT_PUBLIC_APP_URL || ""}/form/${form.slug}`.replace("http://", "")}
+            {`${getAppUrl()}/form/${form.slug}`.replace("http://", "")}
           </code>
           <CopyButton slug={form.slug} />
           <div className="h-5 w-px bg-line" />

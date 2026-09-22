@@ -1,3 +1,4 @@
+import { getAppUrl } from "@/lib/url";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -176,7 +177,7 @@ export default async function Home() {
             "@type": "WebSite",
             name: settings.siteName,
             description: settings.tagline,
-            url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+            url: getAppUrl(),
           }),
         }}
       />

@@ -1,3 +1,4 @@
+import { getAppUrl } from "@/lib/url";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -42,7 +43,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   if (!post) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const siteUrl = getAppUrl();
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
