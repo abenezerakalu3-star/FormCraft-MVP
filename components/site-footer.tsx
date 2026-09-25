@@ -9,6 +9,7 @@ export default function SiteFooter({ settings }: { settings: SiteSettings }) {
       heading: "Product",
       items: [
         { label: "Features", href: "/#features" },
+        { label: "Templates", href: "/templates" },
         { label: "How it works", href: "/guide" },
         { label: "Pricing", href: "/pricing" },
         { label: "Blog", href: "/blog" },
