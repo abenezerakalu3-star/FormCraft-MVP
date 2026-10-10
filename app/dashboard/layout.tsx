@@ -1,11 +1,7 @@
-import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import DashboardWarningBanner from "@/components/dashboard-warning-banner";
 import EmailVerificationBanner from "@/components/email-verification-banner";
-import DashboardHeader from "@/components/dashboard-header";
-import DashboardUserMenu from "@/components/dashboard-user-menu";
-import ThemeToggle from "@/components/theme-toggle";
-import LogoMark from "@/components/logo-mark";
+import DashboardSidebar from "@/components/dashboard-sidebar";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
@@ -13,31 +9,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
     (user.warnings as unknown as { message: string; by: string; at: string }[] | null) || [];
 
   return (
-    <div className="min-h-screen bg-canvas">
+    <>
       {warnings.length > 0 && <DashboardWarningBanner message={warnings[warnings.length - 1].message} />}
       <EmailVerificationBanner
         emailVerified={user.emailVerified}
         email={user.email}
       />
-      <header className="sticky top-0 z-40 border-b border-line/70 bg-surface/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <div className="flex items-center gap-8">
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-2 text-xl font-bold tracking-tight"
-            >
-              <LogoMark />
-              Formitect
-            </Link>
-            <DashboardHeader />
-          </div>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <DashboardUserMenu name={user.name} email={user.email} />
-          </div>
-        </div>
-      </header>
-      <main className="mx-auto max-w-6xl px-6 py-8">{children}</main>
-    </div>
+      <DashboardSidebar name={user.name} email={user.email}>
+        <div className="mx-auto max-w-5xl px-4 py-8 md:px-8">{children}</div>
+      </DashboardSidebar>
+    </>
   );
 }
