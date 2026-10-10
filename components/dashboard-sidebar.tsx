@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ClipboardList, CreditCard, Menu, Plus, UserRound, X, LogOut } from "lucide-react";
+import { ClipboardList, CreditCard, Menu, Plus, UserRound, X, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import LogoMark from "@/components/logo-mark";
 import ThemeToggle from "@/components/theme-toggle";
 import DashboardUserMenu from "@/components/dashboard-user-menu";
@@ -21,24 +21,14 @@ function isActive(href: string, pathname: string) {
   return pathname.startsWith(href);
 }
 
-export default function DashboardSidebar({ name, email, children }: { name: string | null; email: string, children: React.ReactNode }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-
-  async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
-    router.refresh();
-  }
-
-  const SidebarContent = () => (
-    <>
+function SidebarContent({ name, email, pathname, setMobileOpen, logout }: any) {
+  return (
+    <div className="flex w-64 flex-col h-full">
       <div className="flex h-16 shrink-0 items-center px-6">
         <Link
           href="/dashboard"
           className="flex items-center gap-2 text-xl font-bold tracking-tight"
-          onClick={() => setOpen(false)}
+          onClick={() => setMobileOpen(false)}
         >
           <LogoMark />
           Formitect
@@ -53,7 +43,7 @@ export default function DashboardSidebar({ name, email, children }: { name: stri
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={() => setMobileOpen(false)}
                 className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
                   active
                     ? "text-surface dark:text-background"
@@ -96,47 +86,80 @@ export default function DashboardSidebar({ name, email, children }: { name: stri
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
+}
+
+export default function DashboardSidebar({ name, email, children }: { name: string | null; email: string, children: React.ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(true);
+
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+    router.refresh();
+  }
 
   return (
     <div className="flex min-h-screen bg-canvas">
-      {/* Desktop Sidebar */}
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-line bg-surface md:flex">
-        <SidebarContent />
-      </aside>
+      {/* Desktop Sidebar (Togglable) */}
+      <motion.aside
+        initial={false}
+        animate={{ width: desktopOpen ? 256 : 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="hidden shrink-0 flex-col border-r border-line bg-surface md:flex overflow-hidden whitespace-nowrap"
+      >
+        <SidebarContent name={name} email={email} pathname={pathname} setMobileOpen={setMobileOpen} logout={logout} />
+      </motion.aside>
 
-      {/* Mobile Sidebar & Header */}
-      <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-line bg-surface/80 px-4 backdrop-blur-md md:hidden">
+      {/* Main Content Area */}
+      <div className="flex flex-1 flex-col min-w-0">
+        {/* Top Header */}
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between px-4 md:px-6 bg-canvas/80 backdrop-blur-md">
           <div className="flex items-center gap-3">
+            {/* Mobile Hamburger */}
             <button
-              onClick={() => setOpen(true)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-foreground transition-colors hover:bg-gray-100 dark:hover:bg-gray-100/10"
+              onClick={() => setMobileOpen(true)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-foreground transition-colors hover:bg-gray-100 md:hidden dark:hover:bg-gray-100/10"
             >
               <Menu className="h-4 w-4" />
             </button>
+            
+            {/* Desktop Toggle */}
+            <button
+              onClick={() => setDesktopOpen(!desktopOpen)}
+              title={desktopOpen ? "Close sidebar" : "Open sidebar"}
+              className="hidden h-9 w-9 items-center justify-center rounded-lg text-muted transition-colors hover:bg-gray-200 hover:text-foreground md:flex dark:hover:bg-gray-800"
+            >
+              {desktopOpen ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeftOpen className="h-5 w-5" />}
+            </button>
+
+            {/* Mobile Logo */}
             <Link
               href="/dashboard"
-              className="flex items-center gap-2 text-lg font-bold tracking-tight"
+              className="flex items-center gap-2 text-lg font-bold tracking-tight md:hidden"
             >
               <LogoMark />
               Formitect
             </Link>
           </div>
-          <div className="flex items-center gap-2">
+          
+          <div className="flex items-center gap-2 md:hidden">
             <DashboardUserMenu name={name} email={email} />
           </div>
         </header>
 
+        {/* Mobile Sidebar Overlay */}
         <AnimatePresence>
-          {open && (
+          {mobileOpen && (
             <>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={() => setOpen(false)}
+                onClick={() => setMobileOpen(false)}
                 className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
               />
               <motion.aside
@@ -148,19 +171,19 @@ export default function DashboardSidebar({ name, email, children }: { name: stri
               >
                 <div className="absolute right-4 top-4">
                   <button
-                    onClick={() => setOpen(false)}
+                    onClick={() => setMobileOpen(false)}
                     className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-muted hover:text-foreground dark:bg-gray-800"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
-                <SidebarContent />
+                <SidebarContent name={name} email={email} pathname={pathname} setMobileOpen={setMobileOpen} logout={logout} />
               </motion.aside>
             </>
           )}
         </AnimatePresence>
 
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-x-hidden">
           {children}
         </main>
       </div>
